@@ -7,3 +7,10 @@
 body {
   margin: 0;
 }
+
+
+@theme {
+  --color-primary-start: #0055aa;
+  --color-black: #000000;
+  --color-white: #ffffff;
+}
