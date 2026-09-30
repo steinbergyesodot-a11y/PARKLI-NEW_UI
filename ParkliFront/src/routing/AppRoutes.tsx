@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Routes, Route, Navigate } from 'react-router';
+import { Routes, Route } from 'react-router';
 import { ROUTE_REGISTRY } from './registry';
 
 export const AppRoutes: React.FC = () => {
