@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router';
 import { ROUTE_REGISTRY } from '../routing/registry';
 import { useAuth } from '../hooks/useAuth';
-import Button from './Button';
+import Button from './primitives/Button';
 
 export const Navbar = () => {
   const location = useLocation();

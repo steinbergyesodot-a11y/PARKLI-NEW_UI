@@ -4,7 +4,7 @@ import { AppRoutes } from './routing/AppRoutes';
 import { Navbar } from './components/Navbar';
 import { AuthProvider } from './hooks/useAuth';
 import { useLocation } from 'react-router';
-import Button from './components/Button';
+import Button from './components/primitives/Button';
 
 const AppLayout: React.FC = () => {
   const location = useLocation();
