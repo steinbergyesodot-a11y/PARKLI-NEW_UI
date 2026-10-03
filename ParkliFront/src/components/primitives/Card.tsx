@@ -7,7 +7,7 @@ export function Card({ className = "", ...props }: CardProps) {
   return (
     <div
       {...props}
-      className={`rounded-lg border border-slate-200 bg-white shadow-sm ${className}`}
+      className={`h-25 rounded-lg border border-slate-200 shadow-sm ${className}`}
     />
   );
 }
@@ -31,7 +31,7 @@ export function CardTitle({ className = "", ...props }: CardTitleProps) {
   return (
     <h3
       {...props}
-      className={`text-2xl font-semibold leading-none tracking-tight text-slate-900 ${className}`}
+      className={`text-2xl font-bold leading-none tracking-tight text-slate-900 ${className}`}
     />
   );
 }

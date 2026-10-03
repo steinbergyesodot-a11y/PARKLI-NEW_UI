@@ -17,7 +17,7 @@ export const Navbar = () => {
   }
 
   return (
-    <header className={`sticky top-3 z-50 mx-auto w-[calc(100%-2rem)] max-w-7xl rounded-xl border border-slate-200 ${location.pathname === '/' ? 'bg-white/70' : 'bg-white/95'} shadow-sm shadow-slate-900/5 backdrop-blur lg:w-[70%]`}>
+    <header className={`sticky top-3 z-50 mx-auto w-[calc(100%-2rem)] max-w-7xl rounded-xl border border-slate-200 ${location.pathname === '/' ? 'bg-white' : 'bg-white/95'} shadow-sm shadow-slate-900/5 backdrop-blur lg:w-[70%]`}>
       <nav className="relative mx-auto flex h-[76px] w-full items-center justify-between gap-10 px-5 sm:px-8" aria-label="Main navigation">
         <Link to={ROUTE_REGISTRY.HOME.path} className="flex shrink-0 items-center gap-2.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-start focus-visible:ring-offset-2" onClick={closeMenu}>
           <img src="/logo.png" alt="Parkli home" className="h-12 w-40 object-cover" />
