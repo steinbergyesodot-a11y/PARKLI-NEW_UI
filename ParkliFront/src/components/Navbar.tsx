@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Link, NavLink, useLocation } from 'react-router';
+import { useLocation } from 'react-router';
 import { ROUTE_REGISTRY } from '../routing/registry';
 import { useAuth } from '../hooks/useAuth';
 import Button from './primitives/Button';
+import { Card } from './primitives/Card';
 
 export const Navbar = () => {
   const location = useLocation();
@@ -10,6 +11,10 @@ export const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const closeMenu = () => setMenuOpen(false);
+  const navLinkClass = (path: string, inactiveClassName = 'text-slate-600 hover:bg-slate-100 hover:text-slate-950') => {
+    const isActive = location.pathname === path || location.pathname.startsWith(`${path}/`);
+    return `rounded-lg px-3.5 py-2.5 text-md font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-start focus-visible:ring-offset-2 ${isActive ? 'bg-blue-50 text-primary-start' : inactiveClassName}`;
+  };
 
   // Don't render Navbar on the login page
   if (location.pathname === ROUTE_REGISTRY.LOGIN.path) {
@@ -17,11 +22,12 @@ export const Navbar = () => {
   }
 
   return (
-    <header className={`sticky top-3 z-50 mx-auto w-[calc(100%-2rem)] max-w-7xl rounded-xl border border-slate-200 ${location.pathname === '/' ? 'bg-white' : 'bg-white/95'} shadow-sm shadow-slate-900/5 backdrop-blur lg:w-[70%]`}>
-      <nav className="relative mx-auto flex h-[76px] w-full items-center justify-between gap-10 px-5 sm:px-8" aria-label="Main navigation">
-        <Link to={ROUTE_REGISTRY.HOME.path} className="flex shrink-0 items-center gap-2.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-start focus-visible:ring-offset-2" onClick={closeMenu}>
+    <header className="sticky top-3 z-50 mx-auto w-[calc(100%-2rem)] max-w-7xl lg:w-[70%]">
+      <Card className={`h-auto w-full rounded-xl border border-slate-200 ${location.pathname === '/' ? 'bg-white' : 'bg-white/95'} shadow-sm shadow-slate-900/5 backdrop-blur`}>
+        <nav className="relative mx-auto flex h-[76px] w-full items-center justify-between gap-10 px-5 sm:px-8" aria-label="Main navigation">
+        <Button to={ROUTE_REGISTRY.HOME.path} variant="ghost" className="flex shrink-0 items-center gap-2.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-start focus-visible:ring-offset-2" onClick={closeMenu}>
           <img src="/logo.png" alt="Parkli home" className="h-12 w-40 object-cover" />
-        </Link>
+        </Button>
 
         <button
           className="flex size-10 flex-col items-center justify-center gap-1 rounded-lg text-slate-700 transition hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-start focus-visible:ring-offset-2 md:hidden"
@@ -41,47 +47,50 @@ export const Navbar = () => {
           id="primary-navigation"
         >
           <div className="flex flex-col gap-1 md:flex-row md:items-center md:gap-1">
-            <NavLink
+            <Button
               to={ROUTE_REGISTRY.DASHBOARD.path}
-              className={({ isActive }) => `rounded-lg px-3.5 py-2.5 text-md font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-start focus-visible:ring-offset-2 ${isActive ? 'bg-blue-50 text-primary-start' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-950'}`}
+              variant="ghost"
+              className={navLinkClass(ROUTE_REGISTRY.DASHBOARD.path)}
               onClick={closeMenu}
             >
               Find parking
-            </NavLink>
-            <NavLink
+            </Button>
+            <Button
               to={ROUTE_REGISTRY.ABOUT.path}
-              className={({ isActive }) => `rounded-lg px-3.5 py-2.5 text-md font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-start focus-visible:ring-offset-2 ${isActive ? 'bg-blue-50 text-primary-start' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-950'}`}
+              variant="ghost"
+              className={navLinkClass(ROUTE_REGISTRY.ABOUT.path)}
               onClick={closeMenu}
             >
               About
-            </NavLink>
-            <NavLink
+            </Button>
+            <Button
               to={ROUTE_REGISTRY.HELP.path}
-              className={({ isActive }) => `rounded-lg px-3.5 py-2.5 text-md font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-start focus-visible:ring-offset-2 ${isActive ? 'bg-blue-50 text-primary-start' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-950'}`}
+              variant="ghost"
+              className={navLinkClass(ROUTE_REGISTRY.HELP.path)}
               onClick={closeMenu}
             >
               Help
-            </NavLink>
+            </Button>
           </div>
 
           <div className="flex flex-col gap-2 border-t border-slate-100 pt-4 md:flex-row md:items-center md:gap-3 md:border-0 md:pt-0">
             {isAuthenticated ? (
               <>
-                <Link className="rounded-lg px-3.5 py-2.5 text-md font-semibold text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-start focus-visible:ring-offset-2" to={ROUTE_REGISTRY.MY_BOOKINGS.path} onClick={closeMenu}>
+                <Button to={ROUTE_REGISTRY.MY_BOOKINGS.path} variant="ghost" className={navLinkClass(ROUTE_REGISTRY.MY_BOOKINGS.path)} onClick={closeMenu}>
                   My bookings
-                </Link>
-                <Link className="rounded-lg px-3.5 py-2.5 text-md font-semibold text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-start focus-visible:ring-offset-2" to={ROUTE_REGISTRY.MY_LISTINGS.path} onClick={closeMenu}>
+                </Button>
+                <Button to={ROUTE_REGISTRY.MY_LISTINGS.path} variant="ghost" className={navLinkClass(ROUTE_REGISTRY.MY_LISTINGS.path)} onClick={closeMenu}>
                   My listings
-                </Link>
+                </Button>
                 <Button to={ROUTE_REGISTRY.BECOME_HOST.path} className="inline-flex min-h-10 items-center justify-center text-md font-bold text-white shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-start focus-visible:ring-offset-2" onClick={closeMenu}>
                   Host your space
                 </Button>
               </>
             ) : (
               <>
-                <Link className="rounded-lg px-3.5 py-2.5 text-md font-semibold text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-start focus-visible:ring-offset-2" to={ROUTE_REGISTRY.LOGIN.path} onClick={closeMenu}>
+                <Button to={ROUTE_REGISTRY.LOGIN.path} variant="ghost" className={navLinkClass(ROUTE_REGISTRY.LOGIN.path, 'text-slate-700 hover:bg-slate-100 hover:text-slate-950')} onClick={closeMenu}>
                   Log in
-                </Link>
+                </Button>
                 <Button to={ROUTE_REGISTRY.SIGNUP.path} className="inline-flex bg-primary-start min-h-10 items-center justify-center text-md font-bold text-white shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-start focus-visible:ring-offset-2" onClick={closeMenu}>
                   Sign up
                 </Button>
@@ -89,7 +98,8 @@ export const Navbar = () => {
             )}
           </div>
         </div>
-      </nav>
+        </nav>
+      </Card>
     </header>
   );
 };

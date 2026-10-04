@@ -15,7 +15,7 @@ const AppLayout: React.FC = () => {
     <>
       {isHomePage && (
         <>
-          <Card className="mx-auto rounded-lg border border-slate-200 bg-primary-start">
+          <Card className="mx-auto rounded-none border-0 bg-primary-start">
             <div className="mx-auto flex h-25 w-full max-w-6xl items-center justify-between px-6 sm:px-10 lg:px-16">
               <div className="flex flex-col gap-2">
               <CardTitle className="text-white text-2xl font-black">Earn money from your driveway</CardTitle>
