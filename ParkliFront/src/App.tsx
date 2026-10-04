@@ -1,122 +1,54 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import React from 'react';
+import { BrowserRouter } from 'react-router';
+import { AppRoutes } from './routing/AppRoutes';
+import { Navbar } from './components/Navbar';
+import { AuthProvider } from './hooks/useAuth';
+import { useLocation } from 'react-router';
+import { Card, CardDescription, CardTitle } from './components/primitives/Card';
+import Button from './components/primitives/Button';
 
-function App() {
-  const [count, setCount] = useState(0)
+const AppLayout: React.FC = () => {
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+      {isHomePage && (
+        <>
+          <Card className="mx-auto rounded-none border-0 bg-primary-start">
+            <div className="mx-auto flex h-25 w-full max-w-6xl items-center justify-between px-6 sm:px-10 lg:px-16">
+              <div className="flex flex-col gap-2">
+              <CardTitle className="text-white text-2xl font-black">Earn money from your driveway</CardTitle>
+              <CardDescription className="text-white text-md">List your driveway and start earning with Parkli</CardDescription>
+              </div>
+            <Button className="h-10 w-32 bg-white text-primary-start">Get Started</Button>
+            </div>
+          </Card>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+        </>
+      )}
+      <div
+        className={isHomePage ? 'min-h-screen bg-cover bg-center bg-no-repeat' : undefined}
+        style={isHomePage ? {
+          backgroundImage:
+            "linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url('/assets/wrigley.jpg')",
+        } : undefined}
+      >
+        <Navbar />
+        <main>
+          <AppRoutes />
+        </main>
+      </div>
     </>
-  )
-}
+  );
+};
 
-export default App
+export const App: React.FC = () => {
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <AppLayout />
+      </BrowserRouter>
+    </AuthProvider>
+  );
+};
