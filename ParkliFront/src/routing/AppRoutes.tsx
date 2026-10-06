@@ -1,11 +1,11 @@
 import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router';
 import { ROUTE_REGISTRY } from './registry';
-import { useAuth } from '../hooks/useAuth';
+// import { useAuth } from '../hooks/useAuth';
 
 export const AppRoutes: React.FC = () => {
 
-  const { isAuthenticated } = useAuth();
+  // const { isAuthenticated } = useAuth();
   
   return (
     <Suspense fallback={<div className="loading-spinner">Loading...</div>}>

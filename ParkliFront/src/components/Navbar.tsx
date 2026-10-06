@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router';
 import { ROUTE_REGISTRY } from '../routing/registry';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../context/AuthContext';
 import Button from './primitives/Button';
 import { Card } from './primitives/Card';
 
 export const Navbar = () => {
   const location = useLocation();
-  const { isAuthenticated } = useAuth();
+  const { user } = useAuth();
+  const isAuthenticated = user !== null;
   const [menuOpen, setMenuOpen] = useState(false);
 
   const closeMenu = () => setMenuOpen(false);

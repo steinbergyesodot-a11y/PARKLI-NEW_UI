@@ -1,8 +1,10 @@
+import { Signup } from "../features/signup/components/signup"
+
 function SignupPage(){
     return(
-        <div>
-            <h1>Signup Page</h1>
-        </div>
+       <>
+       <Signup/>
+       </>
     )
 }
 
