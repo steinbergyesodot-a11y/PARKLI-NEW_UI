@@ -5,6 +5,7 @@ const backendBaseUrl =
 
 const api = axios.create({
   baseURL: backendBaseUrl,
+  withCredentials: true,
 });
 
 api.interceptors.request.use((config) => {

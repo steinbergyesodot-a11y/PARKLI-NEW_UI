@@ -1,8 +1,9 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 // import { jwtDecode } from "jwt-decode";
 import { authService } from "../services/authService";
 import { signupSchema } from "../utils/signupSchema";
+import { useAuth } from "../../../context/AuthContext";
 
 // interface MyJwtPayload {
 //   firstName: string;
@@ -25,6 +26,7 @@ export function useSignup() {
   const [message, setMessage] = useState("");
 
   const navigate = useNavigate();
+  const { setSession } = useAuth();
 
 //   const getTurnstileToken = (): string | null => {
 //     const token = (document.querySelector(
@@ -101,7 +103,17 @@ export function useSignup() {
     //     }
     //   }
 
-      setMessage(response.message || "Account created successfully!");
+      // Backend shape: { success, data: { user, token }, error }
+      if (!response.success || !response.data?.token) {
+        throw new Error(
+          typeof response.error === "string"
+            ? response.error
+            : response.error?.message || "Signup failed. Please try again."
+        );
+      }
+
+      setSession(response.data.user, response.data.token);
+      setMessage("Account created successfully!");
 
       // Clear form
       setFirstName("");
@@ -118,8 +130,9 @@ export function useSignup() {
       const errorMsg =
         typeof data === "string"
           ? data
-          : data?.message ||
-            data?.error ||
+          : data?.error?.message ||
+            (typeof data?.error === "string" ? data.error : undefined) ||
+            data?.message ||
             error.message ||
             "Signup failed. Please try again.";
       setErrorMessage(errorMsg);

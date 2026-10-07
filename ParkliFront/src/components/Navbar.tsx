@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useLocation } from 'react-router';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router';
 import { ROUTE_REGISTRY } from '../routing/registry';
 import { useAuth } from '../context/AuthContext';
 import Button from './primitives/Button';
@@ -7,11 +7,32 @@ import { Card } from './primitives/Card';
 
 export const Navbar = () => {
   const location = useLocation();
-  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const isAuthenticated = user !== null;
   const [menuOpen, setMenuOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
 
-  const closeMenu = () => setMenuOpen(false);
+  useEffect(() => {
+    const onClickOutside = (e: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setUserMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', onClickOutside);
+    return () => document.removeEventListener('mousedown', onClickOutside);
+  }, []);
+
+  const closeMenu = () => {
+    setMenuOpen(false);
+    setUserMenuOpen(false);
+  };
+  const handleLogout = async () => {
+    closeMenu();
+    await logout();
+    navigate(ROUTE_REGISTRY.HOME.path);
+  };
   const navLinkClass = (path: string, inactiveClassName = 'text-slate-600 hover:bg-slate-100 hover:text-slate-950') => {
     const isActive = location.pathname === path || location.pathname.startsWith(`${path}/`);
     return `rounded-lg px-3.5 py-2.5 text-md font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-start focus-visible:ring-offset-2 ${isActive ? 'bg-blue-50 text-primary-start' : inactiveClassName}`;
@@ -77,15 +98,37 @@ export const Navbar = () => {
           <div className="flex flex-col gap-2 border-t border-slate-100 pt-4 md:flex-row md:items-center md:gap-3 md:border-0 md:pt-0">
             {isAuthenticated ? (
               <>
-                <Button to={ROUTE_REGISTRY.MY_BOOKINGS.path} variant="ghost" className={navLinkClass(ROUTE_REGISTRY.MY_BOOKINGS.path)} onClick={closeMenu}>
-                  My bookings
-                </Button>
-                <Button to={ROUTE_REGISTRY.MY_LISTINGS.path} variant="ghost" className={navLinkClass(ROUTE_REGISTRY.MY_LISTINGS.path)} onClick={closeMenu}>
-                  My listings
-                </Button>
                 <Button to={ROUTE_REGISTRY.BECOME_HOST.path} className="inline-flex min-h-10 items-center justify-center text-md font-bold text-white shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-start focus-visible:ring-offset-2" onClick={closeMenu}>
                   Host your space
                 </Button>
+                <div className="relative" ref={userMenuRef}>
+                  <button
+                    type="button"
+                    className="flex w-full items-center gap-2 rounded-full border border-slate-200 py-1 pl-1 pr-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-start focus-visible:ring-offset-2"
+                    aria-haspopup="menu"
+                    aria-expanded={userMenuOpen}
+                    onClick={() => setUserMenuOpen(!userMenuOpen)}
+                  >
+                    <span className="flex size-8 items-center justify-center rounded-full bg-primary-start text-sm font-bold uppercase text-white" aria-hidden="true">
+                      {user?.firstName?.charAt(0)}
+                    </span>
+                    <span>Hello, {user?.firstName}</span>
+                  </button>
+                  {userMenuOpen && (
+                    <div role="menu" className="mt-2 flex flex-col gap-1 rounded-xl border border-slate-200 bg-white p-1.5 shadow-lg shadow-slate-900/10 md:absolute md:right-0 md:top-full md:z-50 md:w-48">
+                      <Button to={ROUTE_REGISTRY.MY_BOOKINGS.path} variant="ghost" className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100" onClick={closeMenu}>
+                        My bookings
+                      </Button>
+                      <Button to={ROUTE_REGISTRY.MY_LISTINGS.path} variant="ghost" className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100" onClick={closeMenu}>
+                        My listings
+                      </Button>
+                      <hr className="my-1 border-slate-100" />
+                      <button type="button" role="menuitem" className="rounded-lg px-3 py-2 text-left text-sm font-semibold text-red-600 transition-colors hover:bg-red-50" onClick={handleLogout}>
+                        Log out
+                      </button>
+                    </div>
+                  )}
+                </div>
               </>
             ) : (
               <>

@@ -4,9 +4,10 @@ import api from '../lib/axiosClient';
 
 // 1. Define Data Models
 export interface User {
-  id: string;
+  _id: string;
   email: string;
-  name?: string;
+  firstName?: string;
+  lastName?: string;
 }
 
 interface AuthResponse {
@@ -20,6 +21,7 @@ interface AuthContextType {
   token: string | null;
   loading: boolean;
   signup: (email: string, password: string, captchaToken: string) => Promise<User>;
+  setSession: (user: User, token: string) => void;
   logout: () => Promise<void>;
   api: AxiosInstance;
 }
@@ -83,6 +85,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return data.user;
   };
 
+  const setSession = (newUser: User, newToken: string): void => {
+    setToken(newToken);
+    setUser(newUser);
+  };
+
   // Logout Handler
   const logout = async (): Promise<void> => {
     try {
@@ -94,7 +101,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, signup, logout, api }}>
+    <AuthContext.Provider value={{ user, token, loading, signup, setSession, logout, api }}>
       {!loading && children}
     </AuthContext.Provider>
   );
