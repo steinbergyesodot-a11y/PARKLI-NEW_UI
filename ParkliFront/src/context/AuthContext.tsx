@@ -19,8 +19,8 @@ interface AuthResponse {
 interface AuthContextType {
   user: User | null;
   token: string | null;
+  isAuthenticated: boolean;
   loading: boolean;
-  signup: (email: string, password: string, captchaToken: string) => Promise<User>;
   setSession: (user: User, token: string) => void;
   logout: () => Promise<void>;
   api: AxiosInstance;
@@ -68,23 +68,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     checkAuth();
   }, []);
 
-  // Signup Handler
-  const signup = async (
-    email: string,
-    password: string,
-    captchaToken: string
-  ): Promise<User> => {
-    const { data } = await api.post<AuthResponse>(
-      '/api/auth/signup',
-      { email, password, captchaToken },
-      { withCredentials: true }
-    );
-
-    setToken(data.accessToken);
-    setUser(data.user);
-    return data.user;
-  };
-
   const setSession = (newUser: User, newToken: string): void => {
     setToken(newToken);
     setUser(newUser);
@@ -100,8 +83,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const isAuthenticated = user !== null;
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, signup, setSession, logout, api }}>
+    <AuthContext.Provider value={{ user, token, isAuthenticated, loading, setSession, logout, api }}>
       {!loading && children}
     </AuthContext.Provider>
   );
