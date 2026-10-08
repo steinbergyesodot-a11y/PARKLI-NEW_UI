@@ -2,7 +2,6 @@ import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import { useAuth } from "../../../context/AuthContext";
-import { authService } from "../services/authService";
 
 export function useLogin() {
   const [email, setEmail] = useState("");
@@ -11,7 +10,7 @@ export function useLogin() {
   const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
-  const { setSession } = useAuth();
+  const { login } = useAuth();
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -19,25 +18,16 @@ export function useLogin() {
     setErrorMessage("");
 
     try {
-      const response = await authService.login({ email, password });
-      const session = response?.data ?? response;
-      const token = session?.token ?? session?.accessToken;
-      const user = session?.user ?? session?.payload;
-
-      if (response?.success === false || !token || !user) {
-       
-        throw new Error(
-          typeof response.error === "string"
-            ? response.error
-            : response.error?.message || "Login failed. Please try again."
-        );
-      }
-
-      setSession(user, token);
+      await login(email, password);
       navigate("/");
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-      
+        console.error("Login request failed", {
+          status: error.response?.status,
+          url: error.config?.url,
+          response: error.response?.data,
+          message: error.message,
+        });
       } else {
         console.error("Login failed", error);
       }

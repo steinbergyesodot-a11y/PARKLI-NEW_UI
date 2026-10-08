@@ -15,12 +15,28 @@ interface AuthResponse {
   user: User;
 }
 
+interface LoginResponse {
+  success?: boolean;
+  data?: {
+    token?: string;
+    accessToken?: string;
+    user?: User;
+    payload?: User;
+  };
+  token?: string;
+  accessToken?: string;
+  user?: User;
+  payload?: User;
+  error?: string | { message?: string };
+}
+
 // 2. Define Context Shape
 interface AuthContextType {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
   loading: boolean;
+  login: (email: string, password: string) => Promise<User>;
   setSession: (user: User, token: string) => void;
   logout: () => Promise<void>;
   api: AxiosInstance;
@@ -73,6 +89,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setUser(newUser);
   };
 
+  const login = async (email: string, password: string): Promise<User> => {
+    const { data: response } = await api.post<LoginResponse>(
+      '/api/users/login',
+      { email, password },
+      { withCredentials: true }
+    );
+    const session = response.data ?? response;
+    const sessionToken = session.token ?? session.accessToken;
+    const sessionUser = session.user ?? session.payload;
+
+    if (response.success === false || !sessionToken || !sessionUser) {
+      throw new Error(
+        typeof response.error === 'string'
+          ? response.error
+          : response.error?.message || 'Login failed. Please try again.'
+      );
+    }
+
+    setSession(sessionUser, sessionToken);
+    return sessionUser;
+  };
+
   // Logout Handler
   const logout = async (): Promise<void> => {
     try {
@@ -86,7 +124,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const isAuthenticated = user !== null;
 
   return (
-    <AuthContext.Provider value={{ user, token, isAuthenticated, loading, setSession, logout, api }}>
+    <AuthContext.Provider value={{ user, token, isAuthenticated, loading, login, setSession, logout, api }}>
       {!loading && children}
     </AuthContext.Provider>
   );
