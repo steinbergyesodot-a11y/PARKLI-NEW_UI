@@ -1,9 +1,7 @@
+import { Login } from "../features/auth/components/login";
+
 function LoginPage() {
-    return (
-        <div>
-            <h1>Login Page</h1>
-        </div>
-    );
+  return <Login />;
 }
 
 export default LoginPage

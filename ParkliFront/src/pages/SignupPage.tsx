@@ -1,8 +1,10 @@
+import { Signup } from "../features/auth/components/signup"
+
 function SignupPage(){
     return(
-        <div>
-            <h1>Signup Page</h1>
-        </div>
+       <>
+       <Signup/>
+       </>
     )
 }
 
