@@ -30,6 +30,13 @@ interface LoginResponse {
   error?: string | { message?: string };
 }
 
+export interface SignupData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
+
 // 2. Define Context Shape
 interface AuthContextType {
   user: User | null;
@@ -37,6 +44,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   loading: boolean;
   login: (email: string, password: string) => Promise<User>;
+  signup: (data: SignupData) => Promise<User>;
   setSession: (user: User, token: string) => void;
   logout: () => Promise<void>;
   api: AxiosInstance;
@@ -89,12 +97,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setUser(newUser);
   };
 
-  const login = async (email: string, password: string): Promise<User> => {
-    const { data: response } = await api.post<LoginResponse>(
-      '/api/users/login',
-      { email, password },
-      { withCredentials: true }
-    );
+  const authenticate = async (
+    url: string,
+    body: object,
+    failureMessage: string
+  ): Promise<User> => {
+    const { data: response } = await api.post<LoginResponse>(url, body, {
+      withCredentials: true,
+    });
     const session = response.data ?? response;
     const sessionToken = session.token ?? session.accessToken;
     const sessionUser = session.user ?? session.payload;
@@ -103,13 +113,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       throw new Error(
         typeof response.error === 'string'
           ? response.error
-          : response.error?.message || 'Login failed. Please try again.'
+          : response.error?.message || failureMessage
       );
     }
 
     setSession(sessionUser, sessionToken);
     return sessionUser;
   };
+
+  const login = (email: string, password: string): Promise<User> =>
+    authenticate('/api/users/login', { email, password }, 'Login failed. Please try again.');
+
+  const signup = (data: SignupData): Promise<User> =>
+    authenticate('/api/users/addUser', data, 'Signup failed. Please try again.');
 
   // Logout Handler
   const logout = async (): Promise<void> => {
@@ -124,7 +140,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const isAuthenticated = user !== null;
 
   return (
-    <AuthContext.Provider value={{ user, token, isAuthenticated, loading, login, setSession, logout, api }}>
+    <AuthContext.Provider value={{ user, token, isAuthenticated, loading, login, signup, setSession, logout, api }}>
       {!loading && children}
     </AuthContext.Provider>
   );
