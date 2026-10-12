@@ -38,7 +38,9 @@ export const Navbar = () => {
   };
 
   // Don't render Navbar on the login page
-  if (location.pathname === ROUTE_REGISTRY.LOGIN.path || location.pathname === ROUTE_REGISTRY.SIGNUP.path) {
+  if (location.pathname === ROUTE_REGISTRY.LOGIN.path || location.pathname === ROUTE_REGISTRY.SIGNUP.path ||
+    location.pathname === ROUTE_REGISTRY.FIND_PARKING.path
+  ) {
     return null;
   }
 
@@ -69,9 +71,9 @@ export const Navbar = () => {
         >
           <div className="flex flex-col gap-1 md:flex-row md:items-center md:gap-1">
             <Button
-              to={ROUTE_REGISTRY.DASHBOARD.path}
+              to={ROUTE_REGISTRY.FIND_PARKING.path}
               variant="ghost"
-              className={navLinkClass(ROUTE_REGISTRY.DASHBOARD.path)}
+              className={navLinkClass(ROUTE_REGISTRY.FIND_PARKING.path)}
               onClick={closeMenu}
             >
               Find parking

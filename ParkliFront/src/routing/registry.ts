@@ -29,9 +29,9 @@ export const ROUTE_REGISTRY = {
     component: lazy(() => import('../pages/LoginPage.tsx')),
     title: 'Login',
   },
-  DASHBOARD: {
-    path: '/dashboard',
-    component: lazy(() => import('../pages/DashboardPage.tsx')),
+  FIND_PARKING: {
+    path: '/find-parking',
+    component: lazy(() => import('../pages/FindParkingPage.tsx')),
     title: 'Dashboard',
     isProtected: true,
     roles: ['admin', 'user'],
