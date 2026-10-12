@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import { useAuth } from "../../../context/AuthContext";
+import { useToast } from "../../../context/ToastContext";
 
 export function useLogin() {
   const [email, setEmail] = useState("");
@@ -11,6 +12,7 @@ export function useLogin() {
 
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { showToast } = useToast();
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -37,7 +39,7 @@ export function useLogin() {
         message?: string;
       };
       const data = err.response?.data;
-      setErrorMessage(
+      const message =
         typeof data === "string"
           ? data
           : typeof data?.error === "string"
@@ -45,8 +47,9 @@ export function useLogin() {
             : data?.error?.message ||
               data?.message ||
               err.message ||
-              "Login failed. Please try again."
-      );
+                    "Login failed. Please try again.";
+                  setErrorMessage(message);
+                  showToast(message, "error");
     } finally {
       setLoading(false);
     }

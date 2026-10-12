@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import type { AxiosInstance } from 'axios';
 import api from '../lib/axiosClient';
+import { useToast } from './ToastContext';
 
 // 1. Define Data Models
 export interface User {
@@ -58,6 +59,7 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const { showToast } = useToast();
   const [user, setUser] = useState<User | null>(null);
   const [token, setTokenState] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -100,7 +102,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const authenticate = async (
     url: string,
     body: object,
-    failureMessage: string
+    failureMessage: string,
+    successMessage: string
   ): Promise<User> => {
     const { data: response } = await api.post<LoginResponse>(url, body, {
       withCredentials: true,
@@ -118,23 +121,39 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
 
     setSession(sessionUser, sessionToken);
+    showToast(successMessage, 'success');
     return sessionUser;
   };
 
   const login = (email: string, password: string): Promise<User> =>
-    authenticate('/api/users/login', { email, password }, 'Login failed. Please try again.');
+    authenticate(
+      '/api/users/login',
+      { email, password },
+      'Login failed. Please try again.',
+      'Successfully logged in.'
+    );
 
   const signup = (data: SignupData): Promise<User> =>
-    authenticate('/api/users/addUser', data, 'Signup failed. Please try again.');
+    authenticate(
+      '/api/users/addUser',
+      data,
+      'Signup failed. Please try again.',
+      'Successfully signed up.'
+    );
 
   // Logout Handler
   const logout = async (): Promise<void> => {
+    let serverLogoutFailed = false;
     try {
       await api.post('/api/auth/logout', null, { withCredentials: true });
+    } catch (error) {
+      serverLogoutFailed = true;
+      console.error('Server logout failed', error);
     } finally {
       setToken(null);
       setUser(null);
     }
+  
   };
 
   const isAuthenticated = user !== null;
