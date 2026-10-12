@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 // import { jwtDecode } from "jwt-decode";
 import { signupSchema } from "../utils/signupSchema";
 import { useAuth } from "../../../context/AuthContext";
+import { useToast } from "../../../context/ToastContext";
 
 // interface MyJwtPayload {
 //   firstName: string;
@@ -26,6 +27,7 @@ export function useSignup() {
 
   const navigate = useNavigate();
   const { signup } = useAuth();
+  const { showToast } = useToast();
 
 //   const getTurnstileToken = (): string | null => {
 //     const token = (document.querySelector(
@@ -52,7 +54,9 @@ export function useSignup() {
 
       if (!validationResult.success) {
         const issues = validationResult.error.issues;
-        setErrorMessage(issues[0].message || "Validation failed");
+        const message = issues[0].message || "Validation failed";
+        setErrorMessage(message);
+        showToast(message, "error");
         console.log(issues);
         setLoading(false);
         return;
@@ -124,6 +128,7 @@ export function useSignup() {
             error.message ||
             "Signup failed. Please try again.";
       setErrorMessage(errorMsg);
+      showToast(errorMsg, "error");
     } finally {
       setLoading(false);
     }

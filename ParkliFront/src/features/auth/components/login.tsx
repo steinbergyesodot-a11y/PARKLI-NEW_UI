@@ -42,12 +42,7 @@ export function Login() {
 						/>
 					</div>
 
-					{errorMessage && (
-						<p className="text-sm text-red-600" role="alert">
-							{errorMessage}
-						</p>
-					)}
-
+				
 					<Button
 						className="!w-full !rounded-md !bg-primary-start !py-2.5 !font-medium !text-white hover:!bg-blue-700 disabled:!cursor-not-allowed disabled:!opacity-60"
 						type="submit"
