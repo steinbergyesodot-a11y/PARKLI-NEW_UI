@@ -25,6 +25,8 @@
   --color-border-subtle: #e2e8f0; /* Card/divider borders */
   --color-text-main: #0f172a;    /* Primary body/heading text */
   --color-text-muted: #64748b;   /* Subtitles, timestamps, captions */
+    --color-text-crazy:red ;   
+
 
   /* ==========================================
      3. TYPOGRAPHY
