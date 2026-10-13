@@ -1,8 +1,8 @@
+import { FindParkingMain } from "../features/find-parking/components/FindParkingMain";
+
 function FindParkingPage() {
     return (
-        <div>
-            <h1>Find Parking Page</h1>
-        </div>
+       <FindParkingMain/>
     );
 }
 
