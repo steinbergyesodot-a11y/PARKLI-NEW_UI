@@ -1,16 +1,63 @@
 @import "tailwindcss";
 
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-}
-
-
 @theme {
-  --color-primary-start: #0055aa;
-  --color-black: #000000;
-  --color-white: #ffffff;
+  /* ==========================================
+     1. BRAND COLORS (Blue Palette)
+     ========================================== */
+  --color-brand-50:  #eff6ff; /* Soft alert background / active tab highlight */
+  --color-brand-100: #dbeafe; /* Subtle borders / light badge fills */
+  --color-brand-200: #bfdbfe; /* Hover states on subtle blue components */
+  --color-brand-500: #3b82f6; /* Secondary interactive elements / icons */
+  --color-brand-600: #2563eb; /* PRIMARY ACTION: Default buttons, active links */
+  --color-brand-700: #1d4ed8; /* Primary button HOVER state */
+  --color-brand-800: #1e40af; /* Primary button ACTIVE state / dark accents */
+  --color-brand-900: #1e3a8a; /* Deep blue headings / dark UI surfaces */
+
+  /* Semantic shortcuts */
+  --color-primary: var(--color-brand-600);
+  --color-primary-hover: var(--color-brand-700);
+
+  /* ==========================================
+     2. NEUTRALS (Slate - pairs best with blue)
+     ========================================== */
+  --color-surface-base: #ffffff; /* Main page/card background */
+  --color-surface-subtle: #f8fafc; /* Subtle page background */
+  --color-border-subtle: #e2e8f0; /* Card/divider borders */
+  --color-text-main: #0f172a;    /* Primary body/heading text */
+  --color-text-muted: #64748b;   /* Subtitles, timestamps, captions */
+    --color-text-crazy:red ;   
+
+
+  /* ==========================================
+     3. TYPOGRAPHY
+     ========================================== */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Poppins', system-ui, sans-serif;
+
+  /* ==========================================
+     4. RADII & SHADOWS
+     ========================================== */
+  --radius-card: 0.75rem; /* 12px */
+  --radius-button: 0.5rem; /* 8px */
+  
+  --shadow-card: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-glow: 0 0 15px -3px rgba(37, 99, 235, 0.3); /* Subtle blue glow */
+}
+
+/* ==========================================
+   GLOBAL BASE DEFAULTS
+   ========================================== */
+@layer base {
+  html, body {
+    font-family: var(--font-sans);
+    color: var(--color-text-main);
+    background-color: var(--color-surface-subtle);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.025em;
+  }
 }
