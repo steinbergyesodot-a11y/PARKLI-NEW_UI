@@ -16,7 +16,7 @@ export function FindParkingMain() {
             <CiLocationOn />
             <p className="text-brand-500 text-sm">WRIGLEYVILLE, CHICAGO</p>
         </div>
-        <p className="text-2xl font-semibold">Game day starts with a good spot.</p>
+        <p className="text-3xl font-semibold">Game day starts with a good spot.</p>
         <p className="text-text-muted text-sm">Park in a neighbor's driveway. Walk to Wrigley. Enjoy the game.</p>
         <FilteringNAV/>
         <div className="flex gap-2">
