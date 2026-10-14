@@ -20,16 +20,16 @@ export function FindParkingMain() {
         <p className="text-text-muted text-sm">Park in a neighbor's driveway. Walk to Wrigley. Enjoy the game.</p>
         <FilteringNAV/>
         <div className="flex gap-2">
-            <Button title="Filters" className="bg-surface-subtle text-brand-300 text-sm border-1 border-border-subtle hover:bg-surface-base">
+            <Button title="Filters" className="bg-surface-subtle text-brand-300 text-sm border-1 border-border-subtle hover:bg-brand-50">
                 <span className="inline-flex items-center gap-2">
                     <GoFilter aria-hidden="true" />
                     Filters
                 </span>
             </Button>
-            <Button children="Under 30$" className="bg-surface-subtle text-brand-300 border-1 text-sm border-border-subtle"/>
-            <Button children="5 min walk" className="bg-surface-subtle text-brand-300 border-1 text-sm border-border-subtle"/>
-            <Button children="Instant booking" className="bg-surface-subtle text-brand-300 border-1 text-sm border-border-subtle"/>
-            <Button children="SUV friendly" className="bg-surface-subtle text-brand-300 border-1 text-sm border-border-subtle"/>
+            <Button children="Under 30$" className="bg-surface-subtle text-brand-300 border-1 text-sm border-border-subtle hover:bg-brand-50"/>
+            <Button children="5 min walk" className="bg-surface-subtle text-brand-300 border-1 text-sm border-border-subtle hover:bg-brand-50"/>
+            <Button children="Instant booking" className="bg-surface-subtle text-brand-300 border-1 text-sm border-border-subtle hover:bg-brand-50"/>
+            <Button children="SUV friendly" className="bg-surface-subtle text-brand-300 border-1 text-sm border-border-subtle hover:bg-brand-50"/>
         </div>
         </div>
     
