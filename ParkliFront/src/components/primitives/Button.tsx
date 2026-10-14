@@ -1,5 +1,6 @@
 import type { ButtonHTMLAttributes, MouseEventHandler, ReactNode } from "react";
 import { Link, type LinkProps } from "react-router";
+import { cn } from "../../lib/utils";
 
 type ButtonProps =
   | ({
@@ -14,7 +15,11 @@ type ButtonProps =
 function Button(props: ButtonProps) {
   if ("to" in props && props.to !== undefined) {
     const { to, children, onClick, variant = "default", className: customClassName, ...linkProps } = props;
-    const className = `${variant === "default" ? "px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700" : ""} transition ${customClassName ?? ""}`;
+    const className = cn(
+      variant === "default" && "px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary-hover",
+      "transition",
+      customClassName
+    );
     return (
       <Link {...linkProps} to={to} onClick={onClick} className={className}>
         {children}
@@ -22,8 +27,11 @@ function Button(props: ButtonProps) {
     );
   }
 
-  const { children, ...buttonProps } = props;
-  const className = `px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition ${buttonProps.className ?? ""}`;
+  const { children, className: customClassName, ...buttonProps } = props;
+  const className = cn(
+    "px-4 py-2 rounded-lg bg-primary text-white shadow transition hover:bg-primary-hover",
+    customClassName
+  );
   return (
     <button {...buttonProps} className={className}>
       {children}

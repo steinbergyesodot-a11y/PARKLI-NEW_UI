@@ -1,3 +1,4 @@
+import Button from "../../../components/primitives/Button";
 import { Card } from "../../../components/primitives/Card";
 import VerticalCardList from "../../../components/primitives/ScrollableList";
 import  { DrivewayCard } from "./DrivewayCard";
@@ -13,7 +14,15 @@ export function FindParkingMain() {
         </div>
         <p className="text-2xl font-semibold">Game day starts with a good spot.</p>
         <p className="text-text-muted text-sm">Park in a neighbor's driveway. Walk to Wrigley. Enjoy the game.</p>
-        <Card/>
+        <Card className="h-20"/>
+        <div className="flex gap-2">
+            <Button/>
+            <Button/>
+            <Button/>
+            <Button/>
+            <Button/>
+
+        </div>
         <VerticalCardList>
             <DrivewayCard/>
         </VerticalCardList>

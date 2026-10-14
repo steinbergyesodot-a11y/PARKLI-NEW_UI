@@ -1,4 +1,5 @@
 import React from 'react';
+import { cn } from '../../lib/utils';
 
 interface VerticalCardListProps {
   children: React.ReactNode;
@@ -25,7 +26,7 @@ export default function VerticalCardList({
 
   if (count === 0 && emptyState) {
     return (
-      <div className="py-12 text-center text-gray-500 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+      <div className={cn('py-12 text-center text-gray-500 bg-gray-50 rounded-2xl border border-dashed border-gray-200', className)}>
         {emptyState}
       </div>
     );
@@ -41,24 +42,12 @@ export default function VerticalCardList({
 
       {/* Scrollable Container */}
       <div
-        className={`
-          overflow-y-auto 
-          pr-2 
-          ${maxHeight} 
-          ${spacing} 
-          ${className}
-          /* Smooth Scrolling & Touch Inertia */
-          scroll-smooth
-          [ -webkit-overflow-scrolling:touch ]
-          
-          /* Custom Tailwind CSS Scrollbar Styling */
-          [&::-webkit-scrollbar]:w-2
-          [&::-webkit-scrollbar-track]:bg-gray-100
-          [&::-webkit-scrollbar-track]:rounded-full
-          [&::-webkit-scrollbar-thumb]:bg-gray-300
-          [&::-webkit-scrollbar-thumb]:rounded-full
-          hover:[&::-webkit-scrollbar-thumb]:bg-gray-400
-        `}
+        className={cn(
+          'overflow-y-auto pr-2 scroll-smooth [ -webkit-overflow-scrolling:touch ] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-400',
+          maxHeight,
+          spacing,
+          className
+        )}
       >
         {children}
       </div>
