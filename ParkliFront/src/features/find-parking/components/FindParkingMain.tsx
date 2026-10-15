@@ -54,9 +54,9 @@ export function FindParkingMain() {
         </div>
 
 
-        <CardHeader className="text-xl font-semibold pb-0">Spots near Wrigley Field</CardHeader>
+        <CardHeader className="text-xl font-semibold mt-3 pl-0 pb-0">Spots near Wrigley Field</CardHeader>
 
-        <div className="mt-8 w-full lg:w-11/20">
+        <div className="mt-2 w-full lg:w-11/20">
             <div className="mb-3 flex w-full flex-wrap items-center justify-between gap-3">
                 <p className="text-sm text-text-muted">
                     {driveways.length} {driveways.length === 1 ? "spot" : "spots"}
