@@ -17,6 +17,7 @@ interface VerticalCardListProps {
 export default function VerticalCardList({
   children,
   maxHeight = 'max-h-[600px]',
+  
   spacing = 'space-y-4',
   className = '',
   emptyState,
