@@ -21,7 +21,7 @@
      2. NEUTRALS (Slate - pairs best with blue)
      ========================================== */
   --color-surface-base: #ffffff; /* Main page/card background */
-  --color-surface-subtle: #f8fafc; /* Subtle page background */
+  --color-surface-subtle: #f7f8f6; /* Subtle page background */
   --color-border-subtle: #e2e8f0; /* Card/divider borders */
   --color-text-main: #0f172a;    /* Primary body/heading text */
   --color-text-muted: #64748b;   /* Subtitles, timestamps, captions */
@@ -42,12 +42,23 @@
   
   --shadow-card: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
   --shadow-glow: 0 0 15px -3px rgba(37, 99, 235, 0.3); /* Subtle blue glow */
+  --shadow-pop: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+  
+  /* Deeper shadow for hover state to make it feel higher */
+  --shadow-pop-hover: 0 20px 30px -10px rgba(15, 23, 42, 0.12), 0 10px 12px -5px rgba(15, 23, 42, 0.06);
+
+  /* Pressed shadow for active click state */
+  --shadow-pop-active: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
 }
 
 /* ==========================================
    GLOBAL BASE DEFAULTS
    ========================================== */
 @layer base {
+  button:not(:disabled), a[href] {
+    cursor: pointer;
+  }
+
   html, body {
     font-family: var(--font-sans);
     color: var(--color-text-main);

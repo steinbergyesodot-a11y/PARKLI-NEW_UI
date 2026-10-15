@@ -11,7 +11,6 @@ export function Login() {
 		password,
 		setPassword,
 		loading,
-		errorMessage,
 		handleSubmit,
 	} = useLogin();
 
