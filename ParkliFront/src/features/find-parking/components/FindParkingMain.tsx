@@ -20,6 +20,10 @@ export function FindParkingMain() {
             key={driveway._id}
             drivewayId={driveway._id}
             drivewayImage={driveway.images[0]}
+            drivewayImages={driveway.images}
+            stadium={driveway.stadium}
+            publicDisplay={driveway.publicDisplay}
+            postedAt={driveway.PostedAt}
             drivewayName={driveway.name}
             drivewayAddress={driveway.address}
             walkMin={driveway.walk}

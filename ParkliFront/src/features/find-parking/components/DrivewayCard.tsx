@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { FaPersonWalking } from "react-icons/fa6";
 import { Card } from "../../../components/primitives/Card";
+import { Modal } from "../../../components/primitives/Modal";
 import { FaStar } from "react-icons/fa";
 import Button from "../../../components/primitives/Button";
 import { CiCalendar } from "react-icons/ci";
@@ -11,12 +13,19 @@ interface DrivewayCardProps {
     drivewayAddress: string
     walkMin: number
     price: number
+    drivewayImages?: string[]
+    stadium?: string
+    publicDisplay?: string
+    postedAt?: string
     view?: "list" | "grid"
 }  
 
-export function DrivewayCard({ drivewayImage, drivewayName, drivewayAddress, walkMin, price, view = "list" }: DrivewayCardProps) {
+export function DrivewayCard({ drivewayImage, drivewayImages = [], drivewayName, drivewayAddress, walkMin, price, stadium, publicDisplay, postedAt, view = "list" }: DrivewayCardProps) {
+    const [isOpen, setIsOpen] = useState(false);
+
     return(
-        <Card className="h-auto w-full border border-brand-100">
+        <>
+        <Card className="h-auto w-full cursor-pointer border border-brand-100" onClick={() => setIsOpen(true)}>
              <div className={`flex gap-3 p-3 ${view === "grid" ? "flex-col" : "flex-col sm:flex-row"}`}>
                 <img
                 src={drivewayImage}
@@ -44,5 +53,22 @@ export function DrivewayCard({ drivewayImage, drivewayName, drivewayAddress, wal
                 </div>
              </div>
         </Card>
+
+        {/* Sibling of Card so clicks inside the modal don't bubble to the card's onClick */}
+        <Modal open={isOpen} onClose={() => setIsOpen(false)} title={drivewayName}>
+            <div className="grid grid-cols-2 gap-2">
+                {(drivewayImages.length > 0 ? drivewayImages : [drivewayImage]).map((src) => (
+                    <img key={src} src={src} alt={drivewayName} className="h-32 w-full rounded-lg object-cover" />
+                ))}
+            </div>
+            <div className="flex flex-col gap-1 text-sm text-text-muted">
+                <p>{drivewayAddress}</p>
+                {publicDisplay && <p>{publicDisplay}</p>}
+                {stadium && <p>{walkMin} min walk to {stadium}</p>}
+                {postedAt && <p>Posted {new Date(postedAt).toLocaleDateString()}</p>}
+            </div>
+            <p className="font-semibold">${price} <span className="text-sm font-normal text-text-muted">/ game</span></p>
+        </Modal>
+        </>
     )
 }
