@@ -22,6 +22,7 @@ interface DrivewayCardProps {
 
 export function DrivewayCard({ drivewayImage, drivewayImages = [], drivewayName, drivewayAddress, walkMin, price, stadium, publicDisplay, postedAt, view = "list" }: DrivewayCardProps) {
     const [isOpen, setIsOpen] = useState(false);
+    const [modalTab, setModalTab] = useState<"details" | "games">("details");
 
     return(
         <>
@@ -55,19 +56,36 @@ export function DrivewayCard({ drivewayImage, drivewayImages = [], drivewayName,
         </Card>
 
         {/* Sibling of Card so clicks inside the modal don't bubble to the card's onClick */}
-        <Modal open={isOpen} onClose={() => setIsOpen(false)} title={drivewayName}>
+        <Modal open={isOpen} onClose={() => setIsOpen(false)} title={drivewayName} className="max-w-md">
+            <p className="text-sm text-text-muted">{drivewayAddress}</p>
+
+            <div className="grid w-full max-w-full grid-cols-2 items-center gap-1 rounded-button bg-gray-100 p-1" role="group" aria-label="Parking information">
+                <Button type="button" className="inline-flex h-full min-w-0 items-center justify-center gap-2 border border-transparent bg-transparent text-sm font-semibold text-text-muted shadow-none hover:bg-[#eceef1] hover:text-text-main aria-pressed:-translate-y-px aria-pressed:bg-surface-base aria-pressed:text-text-main aria-pressed:shadow-[0_2px_5px_rgb(0_0_0/0.1)] aria-pressed:hover:bg-surface-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" aria-pressed={modalTab === "details"} onClick={() => setModalTab("details")}><CiCalendar/> Details</Button>
+                <Button type="button" className="inline-flex h-full min-w-0 items-center justify-center gap-2 border border-transparent bg-transparent text-sm font-semibold text-text-muted shadow-none hover:bg-[#eceef1] hover:text-text-main aria-pressed:-translate-y-px aria-pressed:bg-surface-base aria-pressed:text-text-main aria-pressed:shadow-[0_2px_5px_rgb(0_0_0/0.1)] aria-pressed:hover:bg-surface-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" aria-pressed={modalTab === "games"} onClick={() => setModalTab("games")}><CiCalendar/> All game dates</Button>
+            </div>
+
+            {modalTab === "details" && (
+            <>
             <div className="grid grid-cols-2 gap-2">
                 {(drivewayImages.length > 0 ? drivewayImages : [drivewayImage]).map((src) => (
                     <img key={src} src={src} alt={drivewayName} className="h-32 w-full rounded-lg object-cover" />
                 ))}
             </div>
             <div className="flex flex-col gap-1 text-sm text-text-muted">
-                <p>{drivewayAddress}</p>
-                {publicDisplay && <p>{publicDisplay}</p>}
                 {stadium && <p>{walkMin} min walk to {stadium}</p>}
                 {postedAt && <p>Posted {new Date(postedAt).toLocaleDateString()}</p>}
             </div>
             <p className="font-semibold">${price} <span className="text-sm font-normal text-text-muted">/ game</span></p>
+            </>
+            )}
+
+            {modalTab === "games" && (
+            <div className="flex flex-col gap-2">
+                <Button className="flex items-center gap-2 text-sm"><CiCalendar/> All game dates</Button>
+                <Button className="bg-surface-subtle text-brand-300 border text-sm border-border-subtle hover:bg-brand-50">View spot</Button>
+            </div>
+            )}
+            
         </Modal>
         </>
     )
