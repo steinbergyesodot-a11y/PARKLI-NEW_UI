@@ -9,6 +9,11 @@ import { IoArrowForward, IoInformationCircleOutline, IoShieldCheckmarkOutline } 
 import type { CubsHomeGame } from "../../../lib/utils/cubsSchedual";
 import { Select } from "../../../components/primitives/Select";
 
+const gameMonthFormatter = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago",
+    month: "numeric",
+});
+
 const monthOptions = [
     { value: "", label: "All months" },
     { value: "1", label: "January" },
@@ -39,13 +44,19 @@ interface DrivewayCardProps {
     postedAt?: string
     view?: "list" | "grid"
     selectedGame?: CubsHomeGame | null
+    games: CubsHomeGame[]
+    isLoadingGames: boolean
 }  
 
-export function DrivewayCard({ drivewayImage, drivewayImages = [], drivewayName, drivewayAddress, walkMin, price, stadium,rules, publicDisplay, postedAt, view = "list", selectedGame = null }: DrivewayCardProps) {
+export function DrivewayCard({ drivewayImage, drivewayImages = [], drivewayName, drivewayAddress, walkMin, price, stadium,rules, publicDisplay, postedAt, view = "list", selectedGame = null, games, isLoadingGames }: DrivewayCardProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [modalTab, setModalTab] = useState<"details" | "games">("details");
     const [selectedMonth, setSelectedMonth] = useState("");
     const cancellationTooltipId = useId();
+
+    const filteredGames = games.filter((game) => (
+        selectedMonth === "" || gameMonthFormatter.format(new Date(game.gameDate)) === selectedMonth
+    ));
 
     return(
         <>
@@ -133,14 +144,49 @@ export function DrivewayCard({ drivewayImage, drivewayImages = [], drivewayName,
             )}
 
             {modalTab === "games" && (
-            <div>
+            <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-2">
                 <p className="text-sm text-text-muted">2026</p>
                 <Select
-                    label="Month"
+                    aria-label="Month"
                     options={monthOptions}
                     value={selectedMonth}
                     onChange={(event) => setSelectedMonth(event.target.value)}
                 />
+            </div>
+            {isLoadingGames ? (
+                <p role="status" className="text-sm text-text-muted">Loading games...</p>
+            ) : filteredGames.length === 0 ? (
+                <p role="status" className="text-sm text-text-muted">No home games available for the selected month.</p>
+            ) : (
+                <ul aria-label="Cubs home games" className="flex flex-col gap-3">
+                    {filteredGames.map((game) => (
+                        <li key={game.gamePk}>
+                            <Card className="flex h-auto min-w-0 flex-col gap-2 p-4">
+                                <CardTitle className="text-base font-semibold leading-normal tracking-normal">
+                                    Cubs vs {game.teams.away.team.name}
+                                </CardTitle>
+                                <CardDescription>
+                                    {new Date(game.gameDate).toLocaleDateString("en-US", {
+                                        timeZone: "America/Chicago",
+                                        weekday: "short",
+                                        month: "short",
+                                        day: "numeric",
+                                        year: "numeric",
+                                    })}
+                                </CardDescription>
+                                <CardDescription>
+                                    {game.status.startTimeTBD ? "Time TBD" : `${new Date(game.gameDate).toLocaleTimeString("en-US", {
+                                        timeZone: "America/Chicago",
+                                        hour: "numeric",
+                                        minute: "2-digit",
+                                    })} CT`}
+                                </CardDescription>
+                            </Card>
+                        </li>
+                    ))}
+                </ul>
+            )}
             </div>
             )}
             

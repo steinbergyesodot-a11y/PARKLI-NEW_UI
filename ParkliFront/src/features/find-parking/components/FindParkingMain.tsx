@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../../../components/primitives/Button";
 import VerticalCardList from "../../../components/primitives/ScrollableList";
 import  { DrivewayCard } from "./DrivewayCard";
@@ -8,7 +8,7 @@ import { FilteringNAV } from "./FilteringNAV";
 import { useFindParking } from "../hooks/useFindParking";
 import { CardHeader } from "../../../components/primitives/Card";
 import { LuLayoutGrid, LuList } from "react-icons/lu";
-import type { CubsHomeGame } from "../../../lib/utils/cubsSchedual";
+import { fetchCubsHomeGames, type CubsHomeGame } from "../../../lib/utils/cubsSchedual";
 
 
 
@@ -17,6 +17,22 @@ export function FindParkingMain() {
     const {driveways} = useFindParking();
     const [viewMode, setViewMode] = useState<"list" | "grid">("list");
     const [selectedGame, setSelectedGame] = useState<CubsHomeGame | null>(null);
+    const [games, setGames] = useState<CubsHomeGame[]>([]);
+    const [isLoadingGames, setIsLoadingGames] = useState(true);
+
+    useEffect(() => {
+        let active = true;
+
+        fetchCubsHomeGames({ season: "2026" }).then((homeGames) => {
+            if (active) {
+                setGames([...homeGames].sort((first, second) => Date.parse(first.gameDate) - Date.parse(second.gameDate)));
+                setIsLoadingGames(false);
+            }
+        });
+
+        return () => { active = false; };
+    }, []);
+
     const drivewayCards = driveways.map((driveway) => (
         <DrivewayCard
             key={driveway._id}
@@ -33,6 +49,8 @@ export function FindParkingMain() {
             price={driveway.price}
             view={viewMode}
             selectedGame={selectedGame}
+            games={games}
+            isLoadingGames={isLoadingGames}
         />
     ));
 
@@ -46,7 +64,7 @@ export function FindParkingMain() {
         </div>
         <p className="text-3xl font-semibold">Game day starts with a good spot.</p>
         <p className="text-text-muted text-sm">Park in a neighbor's driveway. Walk to Wrigley. Enjoy the game.</p>
-        <FilteringNAV selectedGame={selectedGame} onSelectGame={setSelectedGame}/>
+        <FilteringNAV selectedGame={selectedGame} onSelectGame={setSelectedGame} games={games} isLoading={isLoadingGames}/>
         <div className="flex gap-2">
             <Button title="Filters" className="bg-surface-subtle text-brand-300 text-sm border-1 border-border-subtle hover:bg-brand-50">
                 <span className="inline-flex items-center gap-2">

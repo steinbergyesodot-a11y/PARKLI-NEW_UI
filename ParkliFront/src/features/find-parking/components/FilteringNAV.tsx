@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { CiCalendar, CiLocationOn, CiSearch } from "react-icons/ci";
 import { Card, CardDescription } from "../../../components/primitives/Card";
 import Button from "../../../components/primitives/Button";
 import { IoCarOutline, IoChevronDown } from "react-icons/io5";
-import { fetchCubsHomeGames, type CubsHomeGame } from "../../../lib/utils/cubsSchedual";
+import type { CubsHomeGame } from "../../../lib/utils/cubsSchedual";
 
 function formatGameDate(game: CubsHomeGame) {
     return new Date(game.gameDate).toLocaleString("en-US", {
@@ -19,25 +19,12 @@ function formatGameDate(game: CubsHomeGame) {
 interface FilteringNAVProps {
     selectedGame: CubsHomeGame | null;
     onSelectGame: (game: CubsHomeGame) => void;
+    games: CubsHomeGame[];
+    isLoading: boolean;
 }
 
-export function FilteringNAV({ selectedGame, onSelectGame }: FilteringNAVProps){
-    const [games, setGames] = useState<CubsHomeGame[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+export function FilteringNAV({ selectedGame, onSelectGame, games, isLoading }: FilteringNAVProps){
     const gameDropdownRef = useRef<HTMLDetailsElement>(null);
-
-    useEffect(() => {
-        let active = true;
-
-        fetchCubsHomeGames({ season: "2027" }).then((homeGames) => {
-            if (active) {
-                setGames([...homeGames].sort((first, second) => Date.parse(first.gameDate) - Date.parse(second.gameDate)));
-                setIsLoading(false);
-            }
-        });
-
-        return () => { active = false; };
-    }, []);
 
     return(
         <Card className="flex h-auto min-h-20 w-full items-stretch">
