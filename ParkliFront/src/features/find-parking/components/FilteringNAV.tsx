@@ -16,10 +16,14 @@ function formatGameDate(game: CubsHomeGame) {
 }
 
 
-export function FilteringNAV(){
+interface FilteringNAVProps {
+    selectedGame: CubsHomeGame | null;
+    onSelectGame: (game: CubsHomeGame) => void;
+}
+
+export function FilteringNAV({ selectedGame, onSelectGame }: FilteringNAVProps){
     const [games, setGames] = useState<CubsHomeGame[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [selectedGame, setSelectedGame] = useState<CubsHomeGame | null>(null);
     const gameDropdownRef = useRef<HTMLDetailsElement>(null);
 
     useEffect(() => {
@@ -74,7 +78,7 @@ export function FilteringNAV(){
                                         aria-pressed={selectedGame?.gamePk === game.gamePk}
                                         className="flex w-full flex-col gap-1 rounded-md p-3 text-left hover:bg-surface-subtle aria-pressed:bg-brand-50 focus-visible:outline-2 focus-visible:outline-primary"
                                         onClick={() => {
-                                            setSelectedGame(game);
+                                            onSelectGame(game);
                                             if (gameDropdownRef.current) {
                                                 gameDropdownRef.current.open = false;
                                                 gameDropdownRef.current.querySelector("summary")?.focus();

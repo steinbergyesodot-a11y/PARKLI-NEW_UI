@@ -12,6 +12,7 @@ interface Driveway {
   stadium: string;
   price: number;
   images: string[];
+    rules: string[];
   PostedAt: string;
 }
 export function useFindParking() {

@@ -8,6 +8,7 @@ import { FilteringNAV } from "./FilteringNAV";
 import { useFindParking } from "../hooks/useFindParking";
 import { CardHeader } from "../../../components/primitives/Card";
 import { LuLayoutGrid, LuList } from "react-icons/lu";
+import type { CubsHomeGame } from "../../../lib/utils/cubsSchedual";
 
 
 
@@ -15,6 +16,7 @@ export function FindParkingMain() {
 
     const {driveways} = useFindParking();
     const [viewMode, setViewMode] = useState<"list" | "grid">("list");
+    const [selectedGame, setSelectedGame] = useState<CubsHomeGame | null>(null);
     const drivewayCards = driveways.map((driveway) => (
         <DrivewayCard
             key={driveway._id}
@@ -25,10 +27,12 @@ export function FindParkingMain() {
             publicDisplay={driveway.publicDisplay}
             postedAt={driveway.PostedAt}
             drivewayName={driveway.name}
+            rules={driveway.rules}
             drivewayAddress={driveway.address}
             walkMin={driveway.walk}
             price={driveway.price}
             view={viewMode}
+            selectedGame={selectedGame}
         />
     ));
 
@@ -42,7 +46,7 @@ export function FindParkingMain() {
         </div>
         <p className="text-3xl font-semibold">Game day starts with a good spot.</p>
         <p className="text-text-muted text-sm">Park in a neighbor's driveway. Walk to Wrigley. Enjoy the game.</p>
-        <FilteringNAV/>
+        <FilteringNAV selectedGame={selectedGame} onSelectGame={setSelectedGame}/>
         <div className="flex gap-2">
             <Button title="Filters" className="bg-surface-subtle text-brand-300 text-sm border-1 border-border-subtle hover:bg-brand-50">
                 <span className="inline-flex items-center gap-2">
