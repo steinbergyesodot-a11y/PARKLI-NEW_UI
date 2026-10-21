@@ -16,7 +16,8 @@ export function HomePageBackground({
         isHomePage
           ? {
               backgroundImage:
-                "linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url('/assets/wrigley.jpg')",
+                "linear-gradient(90deg, rgba(8, 19, 25, 0.68), rgba(8, 19, 25, 0.18)), url('/assets/wrigley.jpg')",
+              backgroundPosition: "center top",
             }
           : undefined
       }

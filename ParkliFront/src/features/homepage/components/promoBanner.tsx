@@ -1,18 +1,21 @@
 import Button from "../../../components/primitives/Button";
-import { Card, CardDescription, CardTitle } from "../../../components/primitives/Card";
+import { IoArrowForward, IoHomeOutline } from "react-icons/io5";
 
 export function PromoBanner() {
     return(
-        <>
-             <Card className="mx-auto rounded-none border-0 bg-primary-start">
-            <div className="mx-auto flex h-25 w-full max-w-6xl items-center justify-between px-6 sm:px-10 lg:px-16">
-              <div className="flex flex-col gap-2">
-              <CardTitle className="text-white text-2xl font-black">Earn money from your driveway</CardTitle>
-              <CardDescription className="text-white text-md">List your driveway and start earning with Parkli</CardDescription>
+        <aside className="border-b border-brand-700 bg-primary text-white" aria-label="Become a Parkli host">
+            <div className="mx-auto flex min-h-14 w-full max-w-7xl flex-wrap items-center justify-between gap-x-5 gap-y-2 px-4 py-3 sm:px-6 lg:px-8">
+              <div className="flex min-w-0 flex-1 items-center gap-3">
+                <IoHomeOutline aria-hidden="true" className="hidden shrink-0 text-xl sm:block" />
+                <p className="text-sm leading-relaxed">
+                  <span className="font-semibold">Your driveway. Their game day.</span>
+                  <span className="hidden text-blue-100 sm:inline"> Earn money with Parkli.</span>
+                </p>
               </div>
-            <Button className="h-10 w-32 bg-white text-primary-start">Get Started</Button>
+              <Button className="inline-flex shrink-0 items-center gap-2 rounded-md bg-white px-3 py-2 text-xs font-semibold text-primary shadow-none hover:bg-brand-50 sm:text-sm">
+                Get Started <IoArrowForward aria-hidden="true" className="text-base" />
+              </Button>
             </div>
-          </Card>
-        </>
+        </aside>
     )
 }
