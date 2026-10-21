@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { findParkingService } from "../services/findParking";
+import type { IGame } from "../components/DrivewayCard";
 
 
 interface Driveway {
@@ -10,8 +11,10 @@ interface Driveway {
   walk: number;
   name: string;
   stadium: string;
+  games : IGame[]
   price: number;
   images: string[];
+  rules: string[];
   PostedAt: string;
 }
 export function useFindParking() {

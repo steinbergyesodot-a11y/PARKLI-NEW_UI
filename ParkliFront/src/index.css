@@ -16,6 +16,8 @@
   /* Semantic shortcuts */
   --color-primary: var(--color-brand-600);
   --color-primary-hover: var(--color-brand-700);
+  --color-danger: #b91c1c;
+  --color-danger-subtle: #fef2f2;
 
   /* ==========================================
      2. NEUTRALS (Slate - pairs best with blue)
