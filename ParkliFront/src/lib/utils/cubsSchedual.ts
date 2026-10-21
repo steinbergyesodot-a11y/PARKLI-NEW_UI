@@ -5,9 +5,12 @@ interface GameScheduleParams {
 }
 
 export interface CubsHomeGame {
-  gamePk: number;
   gameDate: string;
-  status: { startTimeTBD?: boolean };
+  visitingTeam: string;
+}
+
+interface ScheduleGame {
+  gameDate: string;
   teams: {
     home: { team: { id: number; name: string } };
     away: { team: { id: number; name: string } };
@@ -27,7 +30,7 @@ export async function fetchCubsHomeGames({ startDate, endDate, season = "2026" }
       throw new Error(`Failed to fetch MLB schedule: ${response.statusText}`);
     }
 
-    const data: { dates?: { games: CubsHomeGame[] }[] } = await response.json();
+    const data: { dates?: { games: ScheduleGame[] }[] } = await response.json();
     
     // 1. Flatten all games from the dates array
     const allGames = data.dates ? data.dates.flatMap((dateGroup) => dateGroup.games) : [];
@@ -35,7 +38,10 @@ export async function fetchCubsHomeGames({ startDate, endDate, season = "2026" }
     // 2. Filter to keep ONLY games where the Cubs are the home team
     const homeGames = allGames.filter((game) => game.teams.home.team.id === cubsTeamId);
     
-    return homeGames;
+    return homeGames.map((game) => ({
+      gameDate: game.gameDate,
+      visitingTeam: game.teams.away.team.name,
+    }));
   } catch (error) {
     console.error("Error fetching Cubs home games:", error);
     return [];

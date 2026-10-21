@@ -6,13 +6,7 @@ import { FaStar } from "react-icons/fa";
 import Button from "../../../components/primitives/Button";
 import { CiCalendar } from "react-icons/ci";
 import { IoArrowForward, IoInformationCircleOutline, IoShieldCheckmarkOutline } from "react-icons/io5";
-import type { CubsHomeGame } from "../../../lib/utils/cubsSchedual";
 import { Select } from "../../../components/primitives/Select";
-
-const gameMonthFormatter = new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/Chicago",
-    month: "numeric",
-});
 
 const monthOptions = [
     { value: "", label: "All months" },
@@ -29,7 +23,15 @@ const monthOptions = [
     { value: "11", label: "November" },
     { value: "12", label: "December" },
 ];
-
+export interface IGame {
+    _id: string;
+  visiting_team: string;
+  game_time: string,
+  parkingBegins: string;
+  date: string;
+  booked: boolean;
+  blocked: boolean;
+}
 interface DrivewayCardProps {
     drivewayId: string
     drivewayImage: string
@@ -43,19 +45,17 @@ interface DrivewayCardProps {
     publicDisplay?: string
     postedAt?: string
     view?: "list" | "grid"
-    selectedGame?: CubsHomeGame | null
-    games: CubsHomeGame[]
-    isLoadingGames: boolean
+    games: IGame[]
 }  
 
-export function DrivewayCard({ drivewayImage, drivewayImages = [], drivewayName, drivewayAddress, walkMin, price, stadium,rules, publicDisplay, postedAt, view = "list", selectedGame = null, games, isLoadingGames }: DrivewayCardProps) {
+export function DrivewayCard({ drivewayImage, drivewayImages = [], drivewayName, drivewayAddress, walkMin, price, stadium,rules, postedAt, view = "list", games = [] }: DrivewayCardProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [modalTab, setModalTab] = useState<"details" | "games">("details");
     const [selectedMonth, setSelectedMonth] = useState("");
     const cancellationTooltipId = useId();
 
     const filteredGames = games.filter((game) => (
-        selectedMonth === "" || gameMonthFormatter.format(new Date(game.gameDate)) === selectedMonth
+        selectedMonth === "" || String(Number(game.date.split("-")[1])) === selectedMonth
     ));
 
     return(
@@ -154,37 +154,56 @@ export function DrivewayCard({ drivewayImage, drivewayImages = [], drivewayName,
                     onChange={(event) => setSelectedMonth(event.target.value)}
                 />
             </div>
-            {isLoadingGames ? (
-                <p role="status" className="text-sm text-text-muted">Loading games...</p>
-            ) : filteredGames.length === 0 ? (
+            {filteredGames.length === 0 ? (
                 <p role="status" className="text-sm text-text-muted">No home games available for the selected month.</p>
             ) : (
                 <ul aria-label="Cubs home games" className="flex flex-col gap-3">
                     {filteredGames.map((game) => (
-                        <li key={game.gamePk}>
-                            <Card className="flex h-auto min-w-0 flex-col gap-2 p-4">
+                        <li key={game._id}>
+                            <Card className="flex h-auto min-w-0 flex-col gap-4 p-4 sm:flex-row sm:items-end sm:justify-between">
+                                <div className="flex min-w-0 flex-1 flex-col gap-2">
                                 <CardTitle className="text-base font-semibold leading-normal tracking-normal">
-                                    Cubs vs {game.teams.away.team.name}
+                                    Cubs vs {game.visiting_team}
                                 </CardTitle>
+                                <div className="flex flex-wrap items-center gap-2">
                                 <CardDescription>
-                                    {new Date(game.gameDate).toLocaleDateString("en-US", {
-                                        timeZone: "America/Chicago",
+                                    {new Date(game.date).toLocaleDateString("en-US", {
+                                        timeZone: "UTC",
                                         weekday: "short",
                                         month: "short",
                                         day: "numeric",
                                         year: "numeric",
                                     })}
                                 </CardDescription>
+                                <span aria-hidden="true" className="text-sm text-text-muted">&middot;</span>
                                 <CardDescription>
-                                    {game.status.startTimeTBD ? "Time TBD" : `${new Date(game.gameDate).toLocaleTimeString("en-US", {
-                                        timeZone: "America/Chicago",
-                                        hour: "numeric",
-                                        minute: "2-digit",
-                                    })} CT`}
+                                    {game.game_time} CT
                                 </CardDescription>
+                                </div>
+                                <CardDescription>Parking begins {game.parkingBegins} CT</CardDescription>
+                                <p className={`inline-flex items-center gap-1.5 self-start text-sm rounded px-3 py-1 ${game.blocked ? "text-text-muted bg-surface-subtle" : game.booked ? "text-danger bg-danger-subtle" : "text-primary bg-border-subtle"}`}>
+                                    <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-current" />
+                                    {game.blocked ? "Blocked" : game.booked ? "Booked" : "Available"}
+                                </p>
+                                </div>
+                                <div className="flex shrink-0 flex-col items-end gap-2">
+                                    <p className="font-semibold text-text-main">
+                                        ${price} <span className="text-sm font-normal text-text-muted">/ game</span>
+                                    </p>
+                                    <Button
+                                        type="button"
+                                        disabled
+                                        title="Payment page is not available yet"
+                                        className="flex items-center justify-center gap-2 text-sm disabled:cursor-not-allowed disabled:opacity-60"
+                                    >
+                                        Continue to payment
+                                        <IoArrowForward aria-hidden="true" className="shrink-0" />
+                                    </Button>
+                                </div>
                             </Card>
                         </li>
-                    ))}
+                    ))} 
+                    
                 </ul>
             )}
             </div>

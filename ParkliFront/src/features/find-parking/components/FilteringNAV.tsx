@@ -11,8 +11,9 @@ function formatGameDate(game: CubsHomeGame) {
         month: "short",
         day: "numeric",
         year: "numeric",
-        ...(game.status.startTimeTBD ? {} : { hour: "numeric", minute: "2-digit" }),
-    }) + (game.status.startTimeTBD ? " - Time TBD" : " CT");
+        hour: "numeric",
+        minute: "2-digit",
+    }) + " CT";
 }
 
 
@@ -45,8 +46,8 @@ export function FilteringNAV({ selectedGame, onSelectGame, games, isLoading }: F
                     <CiCalendar className="shrink-0 text-xl text-text-muted" />
                     <div className="min-w-0">
                         <CardDescription className="font-semibold">CHOOSE YOUR GAME</CardDescription>
-                        <p className="truncate text-sm text-text-muted" title={selectedGame ? `Cubs vs ${selectedGame.teams.away.team.name} - ${formatGameDate(selectedGame)}` : undefined}>
-                            {selectedGame ? `vs ${selectedGame.teams.away.team.name} - ${formatGameDate(selectedGame)}` : "Select game"}
+                        <p className="truncate text-sm text-text-muted" title={selectedGame ? `Cubs vs ${selectedGame.visitingTeam} - ${formatGameDate(selectedGame)}` : undefined}>
+                            {selectedGame ? `vs ${selectedGame.visitingTeam} - ${formatGameDate(selectedGame)}` : "Select game"}
                         </p>
                     </div>
                     <IoChevronDown className="ml-auto shrink-0 text-text-muted transition-transform group-open:rotate-180" />
@@ -59,10 +60,10 @@ export function FilteringNAV({ selectedGame, onSelectGame, games, isLoading }: F
                     ) : (
                         <ul aria-label="Cubs home games" className="space-y-1">
                             {games.map((game) => (
-                                <li key={game.gamePk}>
+                                <li key={`${game.gameDate}-${game.visitingTeam}`}>
                                     <button
                                         type="button"
-                                        aria-pressed={selectedGame?.gamePk === game.gamePk}
+                                        aria-pressed={selectedGame?.gameDate === game.gameDate && selectedGame?.visitingTeam === game.visitingTeam}
                                         className="flex w-full flex-col gap-1 rounded-md p-3 text-left hover:bg-surface-subtle aria-pressed:bg-brand-50 focus-visible:outline-2 focus-visible:outline-primary"
                                         onClick={() => {
                                             onSelectGame(game);
@@ -72,7 +73,7 @@ export function FilteringNAV({ selectedGame, onSelectGame, games, isLoading }: F
                                             }
                                         }}
                                     >
-                                        <span className="text-sm font-semibold">Cubs vs {game.teams.away.team.name}</span>
+                                        <span className="text-sm font-semibold">Cubs vs {game.visitingTeam}</span>
                                         <span className="text-sm text-text-muted">{formatGameDate(game)}</span>
                                     </button>
                                 </li>

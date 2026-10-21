@@ -11,7 +11,6 @@ import { LuLayoutGrid, LuList } from "react-icons/lu";
 import { fetchCubsHomeGames, type CubsHomeGame } from "../../../lib/utils/cubsSchedual";
 
 
-
 export function FindParkingMain() {
 
     const {driveways} = useFindParking();
@@ -48,9 +47,7 @@ export function FindParkingMain() {
             walkMin={driveway.walk}
             price={driveway.price}
             view={viewMode}
-            selectedGame={selectedGame}
-            games={games}
-            isLoadingGames={isLoadingGames}
+            games={driveway.games}
         />
     ));
 
