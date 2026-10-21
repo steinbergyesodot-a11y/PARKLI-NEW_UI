@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router';
 import { ROUTE_REGISTRY } from '../routing/registry';
 import { useAuth } from '../context/AuthContext';
 import Button from './primitives/Button';
-import { Card } from './primitives/Card';
+import { IoChevronDown, IoCloseOutline, IoMenuOutline } from 'react-icons/io5';
 
 export const Navbar = () => {
   const location = useLocation();
@@ -32,9 +32,9 @@ export const Navbar = () => {
     await logout();
     navigate(ROUTE_REGISTRY.HOME.path);
   };
-  const navLinkClass = (path: string, inactiveClassName = 'text-slate-600 hover:bg-slate-100 hover:text-slate-950') => {
+  const navLinkClass = (path: string, inactiveClassName = 'text-text-muted hover:bg-surface-subtle hover:text-text-main') => {
     const isActive = location.pathname === path || location.pathname.startsWith(`${path}/`);
-    return `rounded-lg px-3.5 py-2.5 text-md font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-start focus-visible:ring-offset-2 ${isActive ? 'bg-blue-50 text-primary-start' : inactiveClassName}`;
+    return `rounded-md px-3 py-2.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${isActive ? 'bg-brand-50 text-primary' : inactiveClassName}`;
   };
 
   // Don't render Navbar on the login page
@@ -45,31 +45,28 @@ export const Navbar = () => {
   }
 
   return (
-    <header className="sticky top-3 z-50 mx-auto w-[calc(100%-2rem)] max-w-7xl lg:w-[70%]">
-      <Card className={`h-auto w-full rounded-xl border border-slate-200 ${location.pathname === '/' ? 'bg-white' : 'bg-white/95'} shadow-sm shadow-slate-900/5 backdrop-blur`}>
-        <nav className="relative mx-auto flex h-[76px] w-full items-center justify-between gap-10 px-5 sm:px-8" aria-label="Main navigation">
-        <Button to={ROUTE_REGISTRY.HOME.path} variant="ghost" className="flex shrink-0 items-center gap-2.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-start focus-visible:ring-offset-2" onClick={closeMenu}>
-          <img src="/logo.png" alt="Parkli home" className="h-12 w-40 object-cover" />
+    <header className="sticky top-0 z-50 w-full border-b border-border-subtle bg-surface-base">
+        <nav className="relative mx-auto flex h-20 w-full max-w-7xl items-center justify-between gap-8 px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
+        <Button to={ROUTE_REGISTRY.HOME.path} variant="ghost" className="relative block h-16 w-36 shrink-0 overflow-hidden rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2" onClick={closeMenu}>
+          <img src="/logo.png" alt="Parkli home" className="absolute left-1/2 top-1/2 h-48 w-48 max-w-none -translate-x-1/2 -translate-y-1/2 object-contain" />
         </Button>
 
         <button
-          className="flex size-10 flex-col items-center justify-center gap-1 rounded-lg text-slate-700 transition hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-start focus-visible:ring-offset-2 md:hidden"
+          className="flex size-11 shrink-0 items-center justify-center rounded-md border border-border-subtle text-text-main transition hover:bg-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 lg:hidden"
           type="button"
           aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
           aria-expanded={menuOpen}
           aria-controls="primary-navigation"
           onClick={() => setMenuOpen(!menuOpen)}
         >
-          <span className={`h-0.5 w-5 rounded-full bg-current transition-transform duration-200 ${menuOpen ? 'translate-y-1.5 rotate-45' : '-translate-y-1.5'}`} />
-          <span className={`h-0.5 w-5 rounded-full bg-current transition-opacity duration-200 ${menuOpen ? 'opacity-0' : 'opacity-100'}`} />
-          <span className={`h-0.5 w-5 rounded-full bg-current transition-transform duration-200 ${menuOpen ? '-translate-y-1.5 -rotate-45' : 'translate-y-1.5'}`} />
+          {menuOpen ? <IoCloseOutline aria-hidden="true" className="text-2xl" /> : <IoMenuOutline aria-hidden="true" className="text-2xl" />}
         </button>
 
         <div
-          className={`${menuOpen ? 'absolute left-0 right-0 top-full flex' : 'hidden'} z-40 flex-col gap-4 border-t border-slate-100 bg-white px-5 py-5 shadow-lg shadow-slate-900/10 sm:px-8 md:static md:flex md:flex-1 md:flex-row md:items-center md:justify-between md:gap-6 md:border-0 md:bg-transparent md:px-0 md:py-0 md:shadow-none`}
+          className={`${menuOpen ? 'absolute left-0 right-0 top-full flex' : 'hidden'} z-40 max-h-[calc(100svh-9rem)] flex-col gap-4 overflow-y-auto border-t border-border-subtle bg-surface-base px-4 py-5 shadow-pop sm:px-6 lg:static lg:flex lg:max-h-none lg:flex-1 lg:flex-row lg:items-center lg:justify-between lg:gap-6 lg:overflow-visible lg:border-0 lg:bg-transparent lg:px-0 lg:py-0 lg:shadow-none`}
           id="primary-navigation"
         >
-          <div className="flex flex-col gap-1 md:flex-row md:items-center md:gap-1">
+          <div className="flex flex-col gap-1 lg:flex-row lg:items-center lg:gap-1">
             <Button
               to={ROUTE_REGISTRY.FIND_PARKING.path}
               variant="ghost"
@@ -96,35 +93,36 @@ export const Navbar = () => {
             </Button>
           </div>
 
-          <div className="flex flex-col gap-2 border-t border-slate-100 pt-4 md:flex-row md:items-center md:gap-3 md:border-0 md:pt-0">
+          <div className="flex flex-col gap-2 border-t border-border-subtle pt-4 lg:flex-row lg:items-center lg:gap-3 lg:border-0 lg:pt-0">
             {isAuthenticated ? (
               <>
-                <Button to={ROUTE_REGISTRY.BECOME_HOST.path} className="inline-flex min-h-10 items-center justify-center text-md font-bold text-white shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-start focus-visible:ring-offset-2" onClick={closeMenu}>
+                <Button to={ROUTE_REGISTRY.BECOME_HOST.path} className="inline-flex min-h-11 items-center justify-center rounded-md text-sm font-semibold text-white shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2" onClick={closeMenu}>
                   Host your space
                 </Button>
                 <div className="relative" ref={userMenuRef}>
                   <button
                     type="button"
-                    className="flex w-full items-center gap-2 rounded-full border border-slate-200 py-1 pl-1 pr-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-start focus-visible:ring-offset-2"
+                    className="flex min-h-11 w-full items-center gap-2 rounded-md border border-border-subtle p-1.5 pr-3 text-sm font-medium text-text-main transition-colors hover:bg-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                     aria-haspopup="menu"
                     aria-expanded={userMenuOpen}
                     onClick={() => setUserMenuOpen(!userMenuOpen)}
                   >
-                    <span className="flex size-8 items-center justify-center rounded-full bg-primary-start text-sm font-bold uppercase text-white" aria-hidden="true">
+                    <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-brand-50 text-xs font-semibold uppercase text-primary" aria-hidden="true">
                       {user?.firstName?.charAt(0)}
                     </span>
-                    <span>Hello, {user?.firstName}</span>
+                    <span className="max-w-36 truncate">Hello, {user?.firstName}</span>
+                    <IoChevronDown aria-hidden="true" className={`ml-auto shrink-0 transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
                   </button>
                   {userMenuOpen && (
-                    <div role="menu" className="mt-2 flex flex-col gap-1 rounded-xl border border-slate-200 bg-white p-1.5 shadow-lg shadow-slate-900/10 md:absolute md:right-0 md:top-full md:z-50 md:w-48">
-                      <Button to={ROUTE_REGISTRY.MY_BOOKINGS.path} variant="ghost" className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100" onClick={closeMenu}>
+                    <div role="menu" className="mt-2 flex flex-col gap-1 rounded-lg border border-border-subtle bg-surface-base p-1.5 shadow-pop lg:absolute lg:right-0 lg:top-full lg:z-50 lg:w-48">
+                      <Button to={ROUTE_REGISTRY.MY_BOOKINGS.path} variant="ghost" className="rounded-md px-3 py-2.5 text-sm font-medium text-text-main hover:bg-surface-subtle" onClick={closeMenu}>
                         My bookings
                       </Button>
-                      <Button to={ROUTE_REGISTRY.MY_LISTINGS.path} variant="ghost" className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100" onClick={closeMenu}>
+                      <Button to={ROUTE_REGISTRY.MY_LISTINGS.path} variant="ghost" className="rounded-md px-3 py-2.5 text-sm font-medium text-text-main hover:bg-surface-subtle" onClick={closeMenu}>
                         My listings
                       </Button>
-                      <hr className="my-1 border-slate-100" />
-                      <button type="button" role="menuitem" className="rounded-lg px-3 py-2 text-left text-sm font-semibold text-red-600 transition-colors hover:bg-red-50" onClick={handleLogout}>
+                      <hr className="my-1 border-border-subtle" />
+                      <button type="button" role="menuitem" className="rounded-md px-3 py-2.5 text-left text-sm font-medium text-danger transition-colors hover:bg-danger-subtle" onClick={handleLogout}>
                         Log out
                       </button>
                     </div>
@@ -133,10 +131,10 @@ export const Navbar = () => {
               </>
             ) : (
               <>
-                <Button to={ROUTE_REGISTRY.LOGIN.path} variant="ghost" className={navLinkClass(ROUTE_REGISTRY.LOGIN.path, 'text-slate-700 hover:bg-slate-100 hover:text-slate-950')} onClick={closeMenu}>
+                <Button to={ROUTE_REGISTRY.LOGIN.path} variant="ghost" className={navLinkClass(ROUTE_REGISTRY.LOGIN.path)} onClick={closeMenu}>
                   Log in
                 </Button>
-                <Button to={ROUTE_REGISTRY.SIGNUP.path} className="inline-flex bg-primary-start min-h-10 items-center justify-center text-md font-bold text-white shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-start focus-visible:ring-offset-2" onClick={closeMenu}>
+                <Button to={ROUTE_REGISTRY.SIGNUP.path} className="inline-flex min-h-11 items-center justify-center rounded-md text-sm font-semibold text-white shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2" onClick={closeMenu}>
                   Sign up
                 </Button>
               </>
@@ -144,7 +142,6 @@ export const Navbar = () => {
           </div>
         </div>
         </nav>
-      </Card>
     </header>
   );
 };
