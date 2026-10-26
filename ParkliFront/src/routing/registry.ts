@@ -42,7 +42,7 @@ export const ROUTE_REGISTRY = {
     roles: ['admin', 'user'],
   },
   PAYMENT: {
-    path: '/payment',
+    path: '/payment/:drivewayId',
     component: lazy(() => import('../pages/PaymentPage.tsx')),
     title: 'Payment',
     isProtected: true,

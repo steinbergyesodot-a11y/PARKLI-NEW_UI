@@ -7,6 +7,7 @@ import Button from "../../../components/primitives/Button";
 import { CiCalendar } from "react-icons/ci";
 import { IoArrowForward, IoInformationCircleOutline, IoShieldCheckmarkOutline } from "react-icons/io5";
 import { Select } from "../../../components/primitives/Select";
+import { useNavigate } from "react-router";
 
 const monthOptions = [
     { value: "", label: "All months" },
@@ -48,11 +49,12 @@ interface DrivewayCardProps {
     games: IGame[]
 }  
 
-export function DrivewayCard({ drivewayImage, drivewayImages = [], drivewayName, drivewayAddress, walkMin, price, stadium,rules, postedAt, view = "list", games = [] }: DrivewayCardProps) {
+export function DrivewayCard({ drivewayId, drivewayImage, drivewayImages = [], drivewayName, drivewayAddress, walkMin, price, stadium,rules, postedAt, view = "list", games = [] }: DrivewayCardProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [modalTab, setModalTab] = useState<"details" | "games">("details");
     const [selectedMonth, setSelectedMonth] = useState("");
     const cancellationTooltipId = useId();
+    const navigate = useNavigate();
 
     const filteredGames = games.filter((game) => (
         selectedMonth === "" || String(Number(game.date.split("-")[1])) === selectedMonth
@@ -139,7 +141,7 @@ export function DrivewayCard({ drivewayImage, drivewayImages = [], drivewayName,
                 </span>
             </div>
                     <p className="font-semibold">${price} <span className="text-sm font-normal text-text-muted">/ game</span></p>
-                    <Button className="flex items-center justify-center gap-2">Continue to payment <IoArrowForward aria-hidden="true" className="shrink-0" /></Button>
+                    <Button className="flex items-center justify-center gap-2" onClick={() => navigate(`/payment/${drivewayId}`)}>Continue to payment <IoArrowForward aria-hidden="true" className="shrink-0" /></Button>
             </>
             )}
 
@@ -192,9 +194,9 @@ export function DrivewayCard({ drivewayImage, drivewayImages = [], drivewayName,
                                     </p>
                                     <Button
                                         type="button"
-                                        disabled
                                         title="Payment page is not available yet"
                                         className="flex items-center justify-center gap-2 text-sm disabled:cursor-not-allowed disabled:opacity-60"
+                                        onClick={() => navigate(`/payment/${drivewayId}`)}
                                     >
                                         Continue to payment
                                         <IoArrowForward aria-hidden="true" className="shrink-0" />
