@@ -41,6 +41,13 @@ export const ROUTE_REGISTRY = {
     isProtected: true,
     roles: ['admin', 'user'],
   },
+  PAYMENT: {
+    path: '/payment',
+    component: lazy(() => import('../pages/PaymentPage.tsx')),
+    title: 'Payment',
+    isProtected: true,
+    roles: ['admin', 'user'],
+  },
   ABOUT: {
     path: '/about',
     component: lazy(() => import('../pages/AboutPage')),
