@@ -38,8 +38,7 @@ export const Navbar = () => {
   };
 
   // Don't render Navbar on the login page
-  if (location.pathname === ROUTE_REGISTRY.LOGIN.path || location.pathname === ROUTE_REGISTRY.SIGNUP.path ||
-    location.pathname === ROUTE_REGISTRY.FIND_PARKING.path
+  if (location.pathname === ROUTE_REGISTRY.LOGIN.path || location.pathname === ROUTE_REGISTRY.SIGNUP.path
   ) {
     return null;
   }

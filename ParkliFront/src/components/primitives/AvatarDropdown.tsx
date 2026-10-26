@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router";
+import { FiHelpCircle, FiLogOut, FiUser } from "react-icons/fi";
 import { useAuth } from "../../context/AuthContext";
 import { ROUTE_REGISTRY } from "../../routing/registry";
 import Button from "./Button";
@@ -11,7 +12,7 @@ interface AvatarDropdownProps {
 export function AvatarDropdown({ open, onClose }: AvatarDropdownProps) {
     const { user,logout } = useAuth();
     const navigate = useNavigate();
-    const linkClassName = "rounded-md px-3 py-2.5 text-sm font-medium text-text-main hover:bg-surface-subtle";
+    const linkClassName = "flex items-center gap-2 rounded-md px-3 py-2.5 text-sm text-text-main hover:bg-surface-subtle";
 
     const handleLogout = async () => {
         onClose();
@@ -27,14 +28,18 @@ export function AvatarDropdown({ open, onClose }: AvatarDropdownProps) {
                 
                     <>
                         <p className="break-words px-3 py-2 text-sm text-text-muted">Hello, {user?.firstName || user?.email}</p>
-                        <Button to={ROUTE_REGISTRY.MY_BOOKINGS.path} variant="ghost" className={linkClassName} onClick={onClose}>
-                            My bookings
+                        <Button to={ROUTE_REGISTRY.PROFILE.path} variant="ghost" className={linkClassName} onClick={onClose}>
+                            <FiUser aria-hidden="true" className="h-4 w-4 shrink-0" />
+                            My profile
                         </Button>
-                        <Button to={ROUTE_REGISTRY.MY_LISTINGS.path} variant="ghost" className={linkClassName} onClick={onClose}>
-                            My listings
+                        <Button to={ROUTE_REGISTRY.HELP.path} variant="ghost" className={linkClassName} onClick={onClose}>
+                            <FiHelpCircle aria-hidden="true" className="h-4 w-4 shrink-0" />
+                            Help
                         </Button>
+        
                         <hr className="my-1 border-border-subtle" />
-                        <button type="button" className="rounded-md px-3 py-2.5 text-left text-sm font-medium text-danger hover:bg-danger-subtle" onClick={handleLogout}>
+                        <button type="button" className="flex items-center gap-2 rounded-md px-3 py-2.5 text-left text-sm font-medium text-danger hover:bg-danger-subtle" onClick={handleLogout}>
+                            <FiLogOut aria-hidden="true" className="h-4 w-4 shrink-0" />
                             Log out
                         </button>
                     </>
