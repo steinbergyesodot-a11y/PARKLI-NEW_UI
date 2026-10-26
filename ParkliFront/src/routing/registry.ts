@@ -29,6 +29,11 @@ export const ROUTE_REGISTRY = {
     component: lazy(() => import('../pages/LoginPage.tsx')),
     title: 'Login',
   },
+  PROFILE:{
+    path: '/profile',
+    component: lazy(() => import('../pages/ProfilePage')),
+    title: 'Profile',
+  },
   FIND_PARKING: {
     path: '/find-parking',
     component: lazy(() => import('../pages/FindParkingPage.tsx')),
