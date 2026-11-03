@@ -5,15 +5,15 @@ import  { DrivewayCard } from "./DrivewayCard";
 import { CiLocationOn } from "react-icons/ci";
 import { GoFilter } from "react-icons/go";
 import { FilteringNAV } from "./FilteringNAV";
-import { useFindParking } from "../hooks/useFindParking";
 import { CardHeader } from "../../../components/primitives/Card";
 import { LuLayoutGrid, LuList } from "react-icons/lu";
 import { fetchCubsHomeGames, type CubsHomeGame } from "../../../lib/utils/cubsSchedual";
+import { useGetAllDriveways } from "../hooks/useFindParking";
 
 
 export function FindParkingMain() {
 
-    const {driveways} = useFindParking();
+    const {driveways} = useGetAllDriveways();
     const [viewMode, setViewMode] = useState<"list" | "grid">("list");
     const [selectedGame, setSelectedGame] = useState<CubsHomeGame | null>(null);
     const [games, setGames] = useState<CubsHomeGame[]>([]);

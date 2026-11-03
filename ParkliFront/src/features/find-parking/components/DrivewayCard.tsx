@@ -194,9 +194,9 @@ export function DrivewayCard({ drivewayId, drivewayImage, drivewayImages = [], d
                                     </p>
                                     <Button
                                         type="button"
-                                        title="Payment page is not available yet"
+                                        disabled={game.booked || game.blocked}
                                         className="flex items-center justify-center gap-2 text-sm disabled:cursor-not-allowed disabled:opacity-60"
-                                        onClick={() => navigate(`/payment/${drivewayId}`)}
+                                        onClick={() => navigate(`/payment/${drivewayId}?gameId=${encodeURIComponent(game._id)}`)}
                                     >
                                         Continue to payment
                                         <IoArrowForward aria-hidden="true" className="shrink-0" />

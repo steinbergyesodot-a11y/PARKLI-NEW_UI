@@ -1,9 +1,11 @@
-export function PaymentPage() {
+import { MainPayment } from "../features/payment/components/MainPayment";
+
+function PaymentPage() {
     return (
         <>
-        <p>payment page</p>
+        <MainPayment/>
         </>
-    )
+    );
 }
 
 export default PaymentPage;
