@@ -41,6 +41,20 @@ export const ROUTE_REGISTRY = {
     isProtected: true,
     roles: ['admin', 'user'],
   },
+  PAYMENT: {
+    path: '/payment/:drivewayId',
+    component: lazy(() => import('../pages/PaymentPage.tsx')),
+    title: 'Payment',
+    isProtected: true,
+    roles: ['admin', 'user'],
+  },
+  PAYMENT_SUCCESS: {
+    path: '/payment-success',
+    component: lazy(() => import('../pages/PaymentSuccess.tsx')),
+    title: 'Payment Success',
+    isProtected: true,
+    roles: ['admin', 'user'],
+  },
   ABOUT: {
     path: '/about',
     component: lazy(() => import('../pages/AboutPage')),
