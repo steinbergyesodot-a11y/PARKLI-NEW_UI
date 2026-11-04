@@ -97,7 +97,11 @@ export function MainPayment(){
             )}
             {errorMessage && <p role="alert" className="text-sm text-red-600">{errorMessage}</p>}
             {clientSecret ? (
-                <StripePaymentForm clientSecret={clientSecret} />
+                <StripePaymentForm
+                    clientSecret={clientSecret}
+                    returnUrl={`${window.location.origin}/payment-success`}
+                    onPaymentComplete={() => navigate("/payment-success", { replace: true })}
+                />
             ) : (
                 <Button
                     type="button"
