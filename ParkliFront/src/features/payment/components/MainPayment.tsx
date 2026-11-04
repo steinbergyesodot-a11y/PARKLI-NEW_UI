@@ -15,6 +15,10 @@ export function MainPayment(){
     const selectedGameId = searchParams.get("gameId") ?? "";
     const availableGames = driveway?.games.filter((game) => !game.booked && !game.blocked) ?? [];
     const game = availableGames.find((game) => game._id === selectedGameId);
+    const successUrl = `/payment-success?${new URLSearchParams({
+        drivewayId: driveway?._id ?? drivewayId ?? "",
+        gameId: selectedGameId,
+    }).toString()}`;
     const { handlePay, clientSecret, loading, errorMessage } = usePayment({ driveway, game });
 
     return (
@@ -99,8 +103,11 @@ export function MainPayment(){
             {clientSecret ? (
                 <StripePaymentForm
                     clientSecret={clientSecret}
-                    returnUrl={`${window.location.origin}/payment-success`}
-                    onPaymentComplete={() => navigate("/payment-success", { replace: true })}
+                    returnUrl={`${window.location.origin}${successUrl}`}
+                    onPaymentComplete={(paymentIntentId) => navigate(
+                        `${successUrl}&redirect_status=succeeded&payment_intent=${encodeURIComponent(paymentIntentId)}`,
+                        { replace: true },
+                    )}
                 />
             ) : (
                 <Button
