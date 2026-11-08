@@ -4,7 +4,7 @@ import { useAuth } from "../../../context/AuthContext";
 import { addDrivewayService } from "../service/becomeHostService";
 
 
-interface drivewayFormData {
+export interface drivewayFormData {
   ownerId: string;
   address: string;
   city: string;
