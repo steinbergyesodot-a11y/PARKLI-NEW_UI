@@ -23,6 +23,7 @@ interface drivewayFormData {
 
 export function useBecomeHost() {
     const { user, isAuthenticated } = useAuth();
+    const [step, setStep] = useState<1 | 2 | 3 | 4 |5>(1);
     const [formData, setFormData] = useState<drivewayFormData>({
         ownerId: "",
         address: "",
@@ -119,4 +120,14 @@ export function useBecomeHost() {
             }
           }
     }
+    return {
+        formData,
+        setFormData,
+        onboardingUrl,
+        setOnboardingUrl,
+        handleChange,
+        createDriveway,
+        step,
+        setStep
+    };
 }  
