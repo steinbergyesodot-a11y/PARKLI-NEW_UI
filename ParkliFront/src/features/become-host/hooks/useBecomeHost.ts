@@ -2,6 +2,7 @@ import { useState } from "react";
 import imageCompression from "browser-image-compression";
 import { useAuth } from "../../../context/AuthContext";
 import { addDrivewayService } from "../service/becomeHostService";
+import { PARKLI_DRIVEWAY_NOTE_OPTIONS } from "../utils/notes";
 
 
 export interface drivewayFormData {
@@ -69,7 +70,13 @@ export function useBecomeHost() {
           data.append("walk", formData.walk);
           data.append("price", formData.price);
           data.append("description", formData.description);
-          data.append("rules", JSON.stringify(formData.rules));
+          // Backend expects rules as the note texts; formData.rules holds selected note ids
+          const ruleTexts = formData.rules.map(
+            (id) =>
+              PARKLI_DRIVEWAY_NOTE_OPTIONS.find((option) => option.id === id)
+                ?.defaultNoteText ?? id
+          );
+          data.append("rules", JSON.stringify(ruleTexts));
             const options = { 
             maxSizeMB: 1,
             maxWidthOrHeight: 1920, 

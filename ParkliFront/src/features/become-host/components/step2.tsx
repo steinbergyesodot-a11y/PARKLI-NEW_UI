@@ -6,7 +6,13 @@ import { cn } from "../../../lib/utils";
 import { ProgressTracker } from "./progressTracker";
 import type { drivewayFormData } from "../hooks/useBecomeHost";
 
-const WALK_OPTIONS = ["Under 5 min", "5–10 min", "10–15 min", "15+ min"];
+// value is sent to the backend, which requires walk to be a numeric string (minutes)
+const WALK_OPTIONS = [
+    { label: "Under 5 min", value: "5" },
+    { label: "5–10 min", value: "10" },
+    { label: "10–15 min", value: "15" },
+    { label: "15+ min", value: "20" },
+];
 
 interface Step2Props {
     formData: drivewayFormData;
@@ -38,17 +44,17 @@ export function Step2({ formData, onChange, onBack, onContinue }: Step2Props) {
                         <div className="flex flex-wrap gap-3">
                             {WALK_OPTIONS.map((option) => (
                                 <button
-                                    key={option}
+                                    key={option.value}
                                     type="button"
-                                    onClick={() => onChange("walk", option)}
+                                    onClick={() => onChange("walk", option.value)}
                                     className={cn(
                                         "rounded-full border px-5 py-2.5 text-sm transition-colors",
-                                        formData.walk === option
+                                        formData.walk === option.value
                                             ? "border-primary bg-primary/10 font-medium text-primary"
                                             : "border-border-subtle bg-surface-base text-text-main hover:border-primary"
                                     )}
                                 >
-                                    {option}
+                                    {option.label}
                                 </button>
                             ))}
                         </div>
