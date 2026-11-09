@@ -7,7 +7,7 @@ import { ProgressTracker } from "./progressTracker";
 import type { drivewayFormData } from "../hooks/useBecomeHost";
 
 // value is sent to the backend, which requires walk to be a numeric string (minutes)
-const WALK_OPTIONS = [
+export const WALK_OPTIONS = [
     { label: "Under 5 min", value: "5" },
     { label: "5–10 min", value: "10" },
     { label: "10–15 min", value: "15" },
