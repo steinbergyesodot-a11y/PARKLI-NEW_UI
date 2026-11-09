@@ -12,6 +12,8 @@ interface Step5Props {
     onEdit: (step: 1 | 2 | 3 | 4) => void;
     onBack: () => void;
     onSubmit: () => void;
+    error?: string | null;
+    isSubmitting?: boolean;
 }
 
 interface ReviewRow {
@@ -20,7 +22,7 @@ interface ReviewRow {
     editStep: 1 | 2 | 3 | 4;
 }
 
-export function Step5({ formData, onEdit, onBack, onSubmit }: Step5Props) {
+export function Step5({ formData, onEdit, onBack, onSubmit, error, isSubmitting = false }: Step5Props) {
     const coverUrl = useMemo(
         () =>
             formData.images.length > 0
@@ -48,7 +50,14 @@ export function Step5({ formData, onEdit, onBack, onSubmit }: Step5Props) {
 
     const rows: ReviewRow[] = [
         { label: "Nickname", value: formData.name || "—", editStep: 1 },
-        { label: "Address", value: formData.address || "—", editStep: 1 },
+        {
+            label: "Address",
+            value:
+                [formData.address, formData.city, formData.state, formData.zipcode]
+                    .filter(Boolean)
+                    .join(", ") || "—",
+            editStep: 1,
+        },
         { label: "Walk to stadium", value: walkLabel, editStep: 2 },
         {
             label: "Price per game",
@@ -109,18 +118,29 @@ export function Step5({ formData, onEdit, onBack, onSubmit }: Step5Props) {
                     <p className="text-sm text-text-muted">
                         Next, you&rsquo;ll set up payouts with Stripe so you can get paid.
                     </p>
+
+                    {error && (
+                        <p role="alert" className="text-sm font-medium text-red-600">
+                            {error}
+                        </p>
+                    )}
                 </CardContent>
 
                 <CardFooter className="justify-between border-t border-border-subtle p-6">
                     <Button
                         onClick={onBack}
+                        disabled={isSubmitting}
                         className="flex items-center gap-2 bg-transparent text-text-main shadow-none hover:bg-surface-subtle"
                     >
                         <IoArrowBack aria-hidden="true" />
                         Back
                     </Button>
-                    <Button onClick={onSubmit} className="flex items-center gap-2">
-                        Continue
+                    <Button
+                        onClick={onSubmit}
+                        disabled={isSubmitting}
+                        className="flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                        {isSubmitting ? "Submitting…" : "Continue"}
                         <IoArrowForward aria-hidden="true" />
                     </Button>
                 </CardFooter>

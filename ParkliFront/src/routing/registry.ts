@@ -60,6 +60,13 @@ export const ROUTE_REGISTRY = {
     component: lazy(() => import('../pages/AboutPage')),
     title: 'About',
   },
+  ONBOARD_COMPLETE: {
+    path: '/onboarding-complete',
+    component: lazy(() => import('../pages/OnboardComplete')),
+    title: 'Onboard Complete',
+    isProtected: true,
+    roles: ['admin', 'user'],
+  },
  HELP:{
     path: '/help',
     component: lazy(() => import('../pages/HelpPage')),

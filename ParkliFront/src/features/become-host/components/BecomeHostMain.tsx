@@ -8,7 +8,7 @@ import { Step5 } from "./step5";
 
 
 function BecomeHostMain(){
-    const { step, setStep, formData, handleChange, createDriveway } = useBecomeHost();
+    const { step, setStep, formData, handleChange, createDriveway, submitError, isSubmitting } = useBecomeHost();
     return (
         <div>
             {step === 1 && (
@@ -48,6 +48,8 @@ function BecomeHostMain(){
                     onEdit={setStep}
                     onBack={() => setStep(4)}
                     onSubmit={createDriveway}
+                    error={submitError}
+                    isSubmitting={isSubmitting}
                 />
             )}
         </div>
