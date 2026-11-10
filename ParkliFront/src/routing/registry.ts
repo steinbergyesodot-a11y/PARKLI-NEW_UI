@@ -67,6 +67,13 @@ export const ROUTE_REGISTRY = {
     isProtected: true,
     roles: ['admin', 'user'],
   },
+  ONBOARD_RETRY: {
+    path: '/Onboard-Retry',
+    component: lazy(() => import('../pages/Onboard-RetryPage')),
+    title: 'Onboard Retry',
+    isProtected: true,
+    roles: ['admin', 'user'],
+  },
  HELP:{
     path: '/help',
     component: lazy(() => import('../pages/HelpPage')),

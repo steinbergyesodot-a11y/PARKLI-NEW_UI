@@ -82,7 +82,7 @@ export function Step5({ formData, onEdit, onBack, onSubmit, error, isSubmitting 
 
             <Card className="mx-auto h-auto w-full max-w-2xl">
                 <CardHeader>
-                    <CardTitle className="text-3xl leading-tight">Looks good?</CardTitle>
+                    <CardTitle className="text-3xl font-semibold">Looks good?</CardTitle>
                 </CardHeader>
 
                 <CardContent className="flex flex-col gap-6">
