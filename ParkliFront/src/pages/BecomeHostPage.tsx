@@ -1,7 +1,10 @@
+import BecomeHostMain from "../features/become-host/components/BecomeHostMain";
+
 function BecomeHostPage(){
     return (
         <div>
-            <h1>Become Host</h1>
+            <BecomeHostMain/>
+
         </div>
     );
 }

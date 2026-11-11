@@ -51,6 +51,22 @@
 
   /* Pressed shadow for active click state */
   --shadow-pop-active: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+
+  /* ==========================================
+     5. ANIMATIONS
+     ========================================== */
+  --animate-logo-pulse: logo-pulse 1.8s ease-in-out infinite;
+  --animate-dot-bounce: dot-bounce 1.2s ease-in-out infinite;
+
+  @keyframes logo-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50%      { transform: scale(1.06); opacity: 0.75; }
+  }
+
+  @keyframes dot-bounce {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+    40%           { transform: translateY(-6px); opacity: 1; }
+  }
 }
 
 /* ==========================================

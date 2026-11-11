@@ -7,6 +7,7 @@ import { PromoBanner } from './features/homepage/components/promoBanner';
 import { HomePageBackground } from './features/homepage/components/HomePageBackground';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
+import { LoadingProvider } from './context/LoadingContext';
 import { ROUTE_REGISTRY } from './routing/registry';
 
 const AppLayout: React.FC = () => {
@@ -35,11 +36,13 @@ const AppLayout: React.FC = () => {
 export const App: React.FC = () => {
   return (
     <ToastProvider>
+    <LoadingProvider>
     <AuthProvider>
       <BrowserRouter>
         <AppLayout />
       </BrowserRouter>
     </AuthProvider>
+    </LoadingProvider>
     </ToastProvider>
   );
 };
