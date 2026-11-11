@@ -1,6 +1,8 @@
 import { useState } from "react";
 import imageCompression from "browser-image-compression";
 import { useAuth } from "../../../context/AuthContext";
+import { useToast } from "../../../context/ToastContext";
+import { useLoading } from "../../../context/LoadingContext";
 import { addDrivewayService } from "../service/becomeHostService";
 import { PARKLI_DRIVEWAY_NOTE_OPTIONS } from "../utils/notes";
 import { saveNewDriveway } from "../utils/newDrivewayStorage";
@@ -25,6 +27,8 @@ export interface drivewayFormData {
 
 export function useBecomeHost() {
     const { user, isAuthenticated } = useAuth();
+    const { showToast } = useToast();
+    const { isLoading: isSubmitting, showLoading, hideLoading } = useLoading();
     const [step, setStep] = useState<1 | 2 | 3 | 4 |5>(1);
     const [formData, setFormData] = useState<drivewayFormData>({
         ownerId: "",
@@ -43,9 +47,8 @@ export function useBecomeHost() {
         description: "",
       });
       const [onboardingUrl, setOnboardingUrl] = useState<string | null>(null);
-      const [submitError, setSubmitError] = useState<string | null>(null);
-      const [isSubmitting, setIsSubmitting] = useState(false);
 
+      const showSubmitError = (message: string) => showToast(message, "error");
 
       const handleChange = (
         field: keyof drivewayFormData,
@@ -55,7 +58,7 @@ export function useBecomeHost() {
     };
 
       async function createDriveway(){
-        setSubmitError(null);
+        if (isSubmitting) return;
         if (
           !formData.name.trim() ||
           formData.address.trim().length < 5 ||
@@ -63,22 +66,22 @@ export function useBecomeHost() {
           !formData.state.trim() ||
           !formData.zipcode.trim()
         ) {
-          setSubmitError("Please fill in the nickname, street address, city, state and ZIP code.");
+          showSubmitError("Please fill in the nickname, street address, city, state and ZIP code.");
           return;
         }
         if (!formData.walk || !formData.price || Number(formData.price) <= 0) {
-          setSubmitError("Please select a walking time and a price.");
+          showSubmitError("Please select a walking time and a price.");
           return;
         }
         if (formData.images.length === 0) {
-          setSubmitError("Please add at least one photo.");
+          showSubmitError("Please add at least one photo.");
           return;
         }
         if (!isAuthenticated || !user) {
-          setSubmitError("You need to be logged in to list a driveway.");
+          showSubmitError("You need to be logged in to list a driveway.");
           return;
         }
-        setIsSubmitting(true);
+        showLoading("Creating your driveway…");
         let redirecting = false;
         try {
           const data = new FormData()
@@ -116,7 +119,7 @@ export function useBecomeHost() {
 
           const apiResponse = await addDrivewayService.addDriveway(data);
           if (!apiResponse.success) {
-            setSubmitError(apiResponse.error || "Could not create the driveway. Please try again.");
+            showSubmitError(apiResponse.error || "Could not create the driveway. Please try again.");
             return;
           }
 
@@ -138,14 +141,15 @@ export function useBecomeHost() {
           });
 
           if (!onboardingUrl) {
-            setSubmitError("Driveway created, but we couldn't start Stripe onboarding. Please try again from your listings.");
+            showSubmitError("Driveway created, but we couldn't start Stripe onboarding. Please try again from your listings.");
             return;
           }
 
           setOnboardingUrl(onboardingUrl);
           // Stripe onboarding is an external URL, so a full-page redirect is required.
-          // Keep isSubmitting true so the button stays disabled while the browser navigates.
+          // Keep the global loading overlay up while the browser navigates.
           redirecting = true;
+          showLoading("Taking you to Stripe…");
           window.location.assign(onboardingUrl);
         } catch (error: any) {
           let userMsg = "Could not create the driveway. Please try again.";
@@ -158,9 +162,9 @@ export function useBecomeHost() {
           } else if (error?.message) {
             userMsg = error.message;
           }
-          setSubmitError(userMsg);
+          showSubmitError(userMsg);
         } finally {
-          if (!redirecting) setIsSubmitting(false);
+          if (!redirecting) hideLoading();
         }
     }
     return {
@@ -168,7 +172,6 @@ export function useBecomeHost() {
         setFormData,
         onboardingUrl,
         setOnboardingUrl,
-        submitError,
         isSubmitting,
         handleChange,
         createDriveway,
