@@ -8,13 +8,15 @@ import { Step5 } from "./step5";
 
 
 function BecomeHostMain(){
-    const { step, setStep, formData, handleChange, createDriveway, isSubmitting } = useBecomeHost();
+    const { step, setStep, formData, handleChange, handleAddressInput, handleAddressSelect, createDriveway, isSubmitting } = useBecomeHost();
     return (
         <div>
             {step === 1 && (
                 <Step1
                     formData={formData}
                     onChange={handleChange}
+                    onAddressInput={handleAddressInput}
+                    onAddressSelect={handleAddressSelect}
                     onContinue={() => setStep(2)}
                 />
             )}
