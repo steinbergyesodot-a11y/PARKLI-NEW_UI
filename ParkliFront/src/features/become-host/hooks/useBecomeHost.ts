@@ -6,10 +6,12 @@ import { useLoading } from "../../../context/LoadingContext";
 import { addDrivewayService } from "../service/becomeHostService";
 import { PARKLI_DRIVEWAY_NOTE_OPTIONS } from "../utils/notes";
 import { saveNewDriveway } from "../utils/newDrivewayStorage";
+import type { ParsedAddress } from "../utils/mapboxAddress";
 
 
 export interface drivewayFormData {
   ownerId: string;
+  fullAddress: string;
   address: string;
   city: string;
   state: string;
@@ -32,6 +34,7 @@ export function useBecomeHost() {
     const [step, setStep] = useState<1 | 2 | 3 | 4 |5>(1);
     const [formData, setFormData] = useState<drivewayFormData>({
         ownerId: "",
+        fullAddress: "",
         address: "",
         city: "",
         state: "",
@@ -57,16 +60,34 @@ export function useBecomeHost() {
         setFormData(prev => ({ ...prev, [field]: value }));
     };
 
+      // Typing invalidates any previously selected address until a new suggestion is picked.
+      const handleAddressInput = (text: string) => {
+        setFormData(prev => ({
+          ...prev,
+          fullAddress: text,
+          address: "",
+          city: "",
+          state: "",
+          zipcode: "",
+          latitude: 0,
+          longitude: 0,
+        }));
+      };
+
+      const handleAddressSelect = (parsed: ParsedAddress) => {
+        setFormData(prev => ({ ...prev, ...parsed }));
+      };
+
       async function createDriveway(){
         if (isSubmitting) return;
         if (
           !formData.name.trim() ||
-          formData.address.trim().length < 5 ||
+          !formData.address.trim() ||
           !formData.city.trim() ||
           !formData.state.trim() ||
           !formData.zipcode.trim()
         ) {
-          showSubmitError("Please fill in the nickname, street address, city, state and ZIP code.");
+          showSubmitError("Please fill in the nickname and choose your address from the suggestions.");
           return;
         }
         if (!formData.walk || !formData.price || Number(formData.price) <= 0) {
@@ -174,6 +195,8 @@ export function useBecomeHost() {
         setOnboardingUrl,
         isSubmitting,
         handleChange,
+        handleAddressInput,
+        handleAddressSelect,
         createDriveway,
         step,
         setStep
