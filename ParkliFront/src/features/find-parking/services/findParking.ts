@@ -11,6 +11,11 @@ export class FindParkingService {
     const response = await findParkingApi.getDrivewayById(id);
     return response.data;
   }
+
+   async updateDrivewayDate(drivewayId:string, gameDate:string){
+    const response  = await findParkingApi.updateDrivewayDate(drivewayId,gameDate);
+    return response.data
+  }
 }
 
 export const findParkingService = new FindParkingService();

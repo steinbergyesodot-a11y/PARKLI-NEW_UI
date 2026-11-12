@@ -42,6 +42,7 @@ export function usePayment({ driveway, game }: UsePaymentProps) {
         renterId: user._id,
         ownerId: driveway.ownerId,
         drivewayId: driveway._id,
+        gameId: game._id,
         address: driveway.address,
         visiting_team: game.visiting_team,
         gameDate: game.date,

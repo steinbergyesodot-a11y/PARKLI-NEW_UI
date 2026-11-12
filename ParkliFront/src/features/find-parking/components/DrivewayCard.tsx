@@ -141,14 +141,14 @@ export function DrivewayCard({ drivewayId, drivewayImage, drivewayImages = [], d
                 </span>
             </div>
                     <p className="font-semibold">${price} <span className="text-sm font-normal text-text-muted">/ game</span></p>
-                    <Button className="flex items-center justify-center gap-2" onClick={() => navigate(`/payment/${drivewayId}`)}>Continue to payment <IoArrowForward aria-hidden="true" className="shrink-0" /></Button>
+                    <Button className="flex items-center justify-center gap-2" onClick={() => setModalTab("games")}>Select date<IoArrowForward aria-hidden="true" className="shrink-0" /></Button>
             </>
             )}
 
             {modalTab === "games" && (
             <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2">
-                <p className="text-sm text-text-muted">2026</p>
+                <p className="text-sm text-text-muted">2027</p>
                 <Select
                     aria-label="Month"
                     options={monthOptions}
