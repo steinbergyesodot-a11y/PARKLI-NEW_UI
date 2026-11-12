@@ -7,4 +7,10 @@ export const findParkingApi = {
   getDrivewayById: function (id: string) {
     return api.get(`/api/driveways/${encodeURIComponent(id)}`);
   },
+  
+    updateDrivewayDate: function(drivewayId:string, gameDate:string){
+    return api.put(`/api/driveways/${drivewayId}/${gameDate}`);
+  },
+
+   
 };
