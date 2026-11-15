@@ -1,7 +1,9 @@
+import { ProfileMain } from "../features/profile/components/ProfileMain"
+
 export function ProfilePage(){
     return(
         <>
-        <p>profile page</p>
+        <ProfileMain/>
         </>
     )
 }
