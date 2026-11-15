@@ -9,12 +9,14 @@ import { CardHeader } from "../../../components/primitives/Card";
 import { LuLayoutGrid, LuList } from "react-icons/lu";
 import { fetchCubsHomeGames, type CubsHomeGame } from "../../../lib/utils/cubsSchedual";
 import { useGetAllDriveways } from "../hooks/useFindParking";
+import { DrivewayMap } from "./DrivewayMap";
 
 
 export function FindParkingMain() {
 
     const {driveways} = useGetAllDriveways();
     const [viewMode, setViewMode] = useState<"list" | "grid">("list");
+    const [openDrivewayId, setOpenDrivewayId] = useState<string | null>(null);
     const [selectedGame, setSelectedGame] = useState<CubsHomeGame | null>(null);
     const [games, setGames] = useState<CubsHomeGame[]>([]);
     const [isLoadingGames, setIsLoadingGames] = useState(true);
@@ -48,12 +50,16 @@ export function FindParkingMain() {
             price={driveway.price}
             view={viewMode}
             games={driveway.games}
+            isModalOpen={openDrivewayId === driveway._id}
+            onOpenModal={() => setOpenDrivewayId(driveway._id)}
+            onCloseModal={() => setOpenDrivewayId(null)}
         />
     ));
 
 
     return(
-        <>
+        <div className="w-full">
+        <div className="px-4 pt-8 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-5">
         <div className="flex gap-2">
             <CiLocationOn />
@@ -78,8 +84,10 @@ export function FindParkingMain() {
 
 
         <CardHeader className="text-xl font-semibold mt-3 pl-0 pb-0">Spots near Wrigley Field</CardHeader>
+        </div>
 
-        <div className="mt-2 w-full lg:w-11/20">
+        <div className="mt-2 flex flex-col lg:flex-row lg:items-stretch">
+        <div className="w-full px-4 pb-8 sm:px-6 lg:w-2/5 lg:pl-8 lg:pr-6">
             <div className="mb-3 flex w-full flex-wrap items-center justify-between gap-3">
                 <p className="text-sm text-text-muted">
                     {driveways.length} {driveways.length === 1 ? "spot" : "spots"}
@@ -119,11 +127,13 @@ export function FindParkingMain() {
             </div>
             <VerticalCardList
                 spacing={viewMode === "grid" ? "space-y-0" : "space-y-4"}
-                className={viewMode === "grid" ? "grid grid-cols-1 gap-4 lg:grid-cols-2" : ""}
+                className={viewMode === "grid" ? "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1 2xl:grid-cols-2" : ""}
             >
                 {drivewayCards}
             </VerticalCardList>
         </div>
-        </>
+        <DrivewayMap driveways={driveways} onSelectDriveway={setOpenDrivewayId} className="h-96 w-full lg:h-auto lg:min-h-[640px] lg:flex-1" />
+        </div>
+        </div>
     )
 }

@@ -25,7 +25,7 @@ const AppLayout: React.FC = () => {
       )}
       <HomePageBackground isHomePage={isHomePage}>
         {isAuthenticated ? <CompactNavbar /> : <Navbar />}
-        <main className="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-8">
+        <main className={isFindParkingPage ? "w-full" : "mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-8"}>
           <AppRoutes />
         </main>
       </HomePageBackground>

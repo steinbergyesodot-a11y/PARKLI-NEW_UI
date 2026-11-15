@@ -15,6 +15,8 @@ export interface Driveway {
   images: string[];
   rules: string[];
   PostedAt: string;
+  latitude: number;
+  longitude: number;
 }
 async function getAllDriveways(setDriveways: (driveways: Driveway[]) => void) {
     try {
