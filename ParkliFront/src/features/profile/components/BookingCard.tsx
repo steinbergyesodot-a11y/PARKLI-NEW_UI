@@ -1,5 +1,5 @@
 import { formatGameDate } from "../utils/utils";
-import type { Booking } from "./ProfileMain";
+import type { Booking } from "./../types/bookingTypes";
 
 export function BookingCard({ booking }: { booking: Booking }) {
     return (

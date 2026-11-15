@@ -5,20 +5,9 @@ import clsx from "clsx"
 import { useAuth } from "../../../context/AuthContext"
 import { profileService } from "../services/profileService"
 import { BookingCard } from "./BookingCard"
+import type { Booking } from "../types/bookingTypes"
+import { isUpcoming } from "../utils/utils"
 
-export interface Booking {
-  _id: string;
-  drivewayId: string;
-  ownerId: string;
-  renterId: string;
-  address: string;
-  gameDate: string;
-  parkingTime: string;
-  price: number;
-  visiting_team: string;
-  bookedAt: string;
-  cancelBy: string;
-}
 
 type ProfileTab = "upcoming" | "history"
 type PreviewRole = "owner" | "renter"
@@ -33,12 +22,6 @@ const ROLES: { id: PreviewRole; label: string }[] = [
     { id: "renter", label: "Renter" },
 ]
 
-function isUpcoming(booking: Booking) {
-    const gameDate = new Date(booking.gameDate)
-    const startOfToday = new Date()
-    startOfToday.setHours(0, 0, 0, 0)
-    return gameDate >= startOfToday
-}
 
 export function ProfileMain() {
     const { user } = useAuth()
