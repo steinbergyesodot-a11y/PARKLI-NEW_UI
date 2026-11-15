@@ -16,6 +16,7 @@ export function FindParkingMain() {
 
     const {driveways} = useGetAllDriveways();
     const [viewMode, setViewMode] = useState<"list" | "grid">("list");
+    const [openDrivewayId, setOpenDrivewayId] = useState<string | null>(null);
     const [selectedGame, setSelectedGame] = useState<CubsHomeGame | null>(null);
     const [games, setGames] = useState<CubsHomeGame[]>([]);
     const [isLoadingGames, setIsLoadingGames] = useState(true);
@@ -49,6 +50,9 @@ export function FindParkingMain() {
             price={driveway.price}
             view={viewMode}
             games={driveway.games}
+            isModalOpen={openDrivewayId === driveway._id}
+            onOpenModal={() => setOpenDrivewayId(driveway._id)}
+            onCloseModal={() => setOpenDrivewayId(null)}
         />
     ));
 
@@ -128,7 +132,7 @@ export function FindParkingMain() {
                 {drivewayCards}
             </VerticalCardList>
         </div>
-        <DrivewayMap driveways={driveways} className="h-96 w-full lg:h-auto lg:min-h-[640px] lg:flex-1" />
+        <DrivewayMap driveways={driveways} onSelectDriveway={setOpenDrivewayId} className="h-96 w-full lg:h-auto lg:min-h-[640px] lg:flex-1" />
         </div>
         </div>
     )

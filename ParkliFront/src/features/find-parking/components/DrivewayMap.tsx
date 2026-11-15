@@ -16,10 +16,11 @@ interface DrivewayPin {
 
 interface DrivewayMapProps {
     driveways: Driveway[];
+    onSelectDriveway: (drivewayId: string) => void;
     className?: string;
 }
 
-export function DrivewayMap({ driveways, className }: DrivewayMapProps) {
+export function DrivewayMap({ driveways, onSelectDriveway, className }: DrivewayMapProps) {
     const mapRef = useRef<MapRef>(null);
     const [isMapLoaded, setIsMapLoaded] = useState(false);
     const [selectedPinId, setSelectedPinId] = useState<string | null>(null);
@@ -108,10 +109,14 @@ export function DrivewayMap({ driveways, className }: DrivewayMapProps) {
                         closeOnClick={false}
                         onClose={() => setSelectedPinId(null)}
                     >
-                        <div className="pr-4 text-text-main">
-                            <p className="text-sm font-semibold">{selectedPin.address}</p>
-                            <p className="mt-1 text-sm text-text-muted">${selectedPin.price}</p>
-                        </div>
+                        <button
+                            type="button"
+                            onClick={() => onSelectDriveway(selectedPin.id)}
+                            className="block cursor-pointer rounded pr-4 text-left text-text-main hover:text-primary focus-visible:outline-2 focus-visible:outline-primary"
+                        >
+                            <span className="block text-sm font-semibold">{selectedPin.address}</span>
+                            <span className="mt-1 block text-sm text-text-muted">${selectedPin.price}</span>
+                        </button>
                     </Popup>
                 )}
             </Map>

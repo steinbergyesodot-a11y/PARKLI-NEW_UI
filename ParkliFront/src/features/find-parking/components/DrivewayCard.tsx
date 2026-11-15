@@ -47,10 +47,12 @@ interface DrivewayCardProps {
     postedAt?: string
     view?: "list" | "grid"
     games: IGame[]
+    isModalOpen: boolean
+    onOpenModal: () => void
+    onCloseModal: () => void
 }  
 
-export function DrivewayCard({ drivewayId, drivewayImage, drivewayImages = [], drivewayName, drivewayAddress, walkMin, price, stadium,rules, postedAt, view = "list", games = [] }: DrivewayCardProps) {
-    const [isOpen, setIsOpen] = useState(false);
+export function DrivewayCard({ drivewayId, drivewayImage, drivewayImages = [], drivewayName, drivewayAddress, walkMin, price, stadium,rules, postedAt, view = "list", games = [], isModalOpen, onOpenModal, onCloseModal }: DrivewayCardProps) {
     const [modalTab, setModalTab] = useState<"details" | "games">("details");
     const [selectedMonth, setSelectedMonth] = useState("");
     const cancellationTooltipId = useId();
@@ -62,7 +64,7 @@ export function DrivewayCard({ drivewayId, drivewayImage, drivewayImages = [], d
 
     return(
         <>
-        <Card className="h-auto w-full cursor-pointer border border-brand-100" onClick={() => setIsOpen(true)}>
+        <Card className="h-auto w-full cursor-pointer border border-brand-100" onClick={onOpenModal}>
              <div className={`flex gap-3 p-3 ${view === "grid" ? "flex-col" : "flex-col sm:flex-row"}`}>
                 <img
                 src={drivewayImage}
@@ -92,7 +94,7 @@ export function DrivewayCard({ drivewayId, drivewayImage, drivewayImages = [], d
         </Card>
 
         {/* Sibling of Card so clicks inside the modal don't bubble to the card's onClick */}
-        <Modal open={isOpen} onClose={() => setIsOpen(false)} title={drivewayName} className={modalTab === "games" ? "max-w-xl" : "max-w-md"}>
+        <Modal open={isModalOpen} onClose={onCloseModal} title={drivewayName} className={modalTab === "games" ? "max-w-xl" : "max-w-md"}>
             <p className="text-sm text-text-muted">{drivewayAddress}</p>
                             <div className="grid w-full max-w-full grid-cols-2 items-center gap-1 rounded-button bg-gray-100 p-1" role="group" aria-label="Parking information">
                                 <Button type="button" className="inline-flex h-full min-w-0 items-center justify-center gap-2 border border-transparent bg-transparent text-sm font-semibold text-text-muted shadow-none hover:bg-[#eceef1] hover:text-text-main aria-pressed:-translate-y-px aria-pressed:bg-surface-base aria-pressed:text-text-main aria-pressed:shadow-[0_2px_5px_rgb(0_0_0/0.1)] aria-pressed:hover:bg-surface-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" aria-pressed={modalTab === "details"} onClick={() => setModalTab("details")}><CiCalendar/> Details</Button>
