@@ -12,5 +12,9 @@ export const findParkingApi = {
     return api.put(`/api/driveways/${drivewayId}/${gameDate}`);
   },
 
+  getAllDrivewaysByUserId: function (userId: string) {
+    return api.get(`/api/driveways/getAllDrivewaysByUserId/${userId}`);
+  },
+
    
 };

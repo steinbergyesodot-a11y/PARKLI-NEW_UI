@@ -16,6 +16,11 @@ export class FindParkingService {
     const response  = await findParkingApi.updateDrivewayDate(drivewayId,gameDate);
     return response.data
   }
+
+  async getAllDrivewaysByUserId(userId:string){
+    const response  = await findParkingApi.getAllDrivewaysByUserId(userId);
+    return response.data
+  }
 }
 
 export const findParkingService = new FindParkingService();
