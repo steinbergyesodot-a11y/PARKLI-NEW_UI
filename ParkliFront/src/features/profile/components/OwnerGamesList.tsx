@@ -2,8 +2,11 @@ import { useState } from "react"
 import clsx from "clsx"
 import { FiSlash, FiUnlock } from "react-icons/fi"
 import type { IGame } from "../../find-parking/components/DrivewayCard"
+import type { Driveway } from "../../find-parking/hooks/useFindParking"
+import { profileService } from "../services/profileService"
 
 interface OwnerGamesListProps {
+    driveway: Driveway
     games: IGame[]
     price: number
 }
@@ -17,31 +20,42 @@ function formatGameDate(date: string) {
     })
 }
 
-export function OwnerGamesList({ games, price }: OwnerGamesListProps) {
-    // Local block state until a backend endpoint for blocking dates exists
-    const [blockedIds, setBlockedIds] = useState<Set<string>>(
-        () => new Set(games.filter((game) => game.blocked).map((game) => game._id))
-    )
+export function OwnerGamesList({ driveway, games, price }: OwnerGamesListProps) {
+    const [gameList, setGameList] = useState(games)
+    const [pendingIds, setPendingIds] = useState<Set<string>>(new Set())
+    const [error, setError] = useState<string | null>(null)
 
-    function toggleBlocked(id: string) {
-        setBlockedIds((prev) => {
-            const next = new Set(prev)
-            if (next.has(id)) next.delete(id)
-            else next.add(id)
-            return next
-        })
+    async function toggleBlocked(game: IGame) {
+        setPendingIds((prev) => new Set(prev).add(game._id))
+        setError(null)
+        try {
+            await profileService.blockGame(driveway._id, game.date)
+            setGameList((prev) =>
+                prev.map((item) => item._id === game._id ? { ...item, blocked: !item.blocked } : item)
+            )
+        } catch {
+            setError("Unable to update this game date. Please try again.")
+        } finally {
+            setPendingIds((prev) => {
+                const next = new Set(prev)
+                next.delete(game._id)
+                return next
+            })
+        }
     }
 
-    if (games.length === 0) {
+    if (gameList.length === 0) {
         return <p className="text-text-muted">No game dates for this driveway yet.</p>
     }
 
-    const sortedGames = [...games].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    const sortedGames = [...gameList].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
     return (
+        <>
+        {error && <p role="alert" className="text-sm text-danger">{error}</p>}
         <ul className="flex flex-col gap-4">
             {sortedGames.map((game) => {
-                const isBlocked = blockedIds.has(game._id)
+                const isBlocked = game.blocked
                 const status = game.booked ? "booked" : isBlocked ? "blocked" : "open"
 
                 return (
@@ -72,7 +86,8 @@ export function OwnerGamesList({ games, price }: OwnerGamesListProps) {
                             {!game.booked && (
                                 <button
                                     type="button"
-                                    onClick={() => toggleBlocked(game._id)}
+                                    onClick={() => void toggleBlocked(game)}
+                                    disabled={pendingIds.has(game._id)}
                                     className="flex items-center gap-2 rounded-xl border border-border-subtle bg-surface-base px-4 py-2.5 text-sm font-medium text-text-main shadow-sm transition hover:bg-surface-subtle"
                                 >
                                     {isBlocked ? <FiUnlock className="h-4 w-4" /> : <FiSlash className="h-4 w-4" />}
@@ -84,5 +99,6 @@ export function OwnerGamesList({ games, price }: OwnerGamesListProps) {
                 )
             })}
         </ul>
+        </>
     )
 }

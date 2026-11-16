@@ -41,7 +41,7 @@ export function ProfileMain() {
     const [activeTab, setActiveTab] = useState<ProfileTab>("upcoming")
     const [previewRole, setPreviewRole] = useState<PreviewRole>("renter")
 
-    useEffect(() => {
+    useEffect(() => {    // renter, upcoming bookings
         if (!user?._id) return
 
         // Ignore responses that arrive after the user changes or the component unmounts
@@ -66,7 +66,7 @@ export function ProfileMain() {
         }
     }, [user?._id])
 
-      useEffect(() => {
+      useEffect(() => {     // owner, get driveways
         if (!user?._id) return
 
         // Ignore responses that arrive after the user changes or the component unmounts
@@ -200,6 +200,7 @@ export function ProfileMain() {
                         firstDriveway ? (
                             <OwnerGamesList
                                 key={firstDriveway._id}
+                                driveway={firstDriveway}
                                 games={firstDriveway.games ?? []}
                                 price={firstDriveway.price}
                             />
