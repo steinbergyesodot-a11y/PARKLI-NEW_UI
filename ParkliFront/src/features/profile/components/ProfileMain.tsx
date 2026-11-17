@@ -14,6 +14,7 @@ import type { Driveway } from "../../find-parking/hooks/useFindParking"
 
 type ProfileTab = "upcoming" | "history" | "driveway" | "games" | "ownerBookings"
 type PreviewRole = "owner" | "renter"
+type OwnerBookingsPeriod = "previous" | "future"
 
 const TABS_BY_ROLE: Record<PreviewRole, { id: ProfileTab; label: string; icon: IconType }[]> = {
     renter: [
@@ -40,19 +41,25 @@ export function ProfileMain() {
     const [bookingsError, setBookingsError] = useState<string | null>(null)
     const [activeTab, setActiveTab] = useState<ProfileTab>("upcoming")
     const [previewRole, setPreviewRole] = useState<PreviewRole>("renter")
+    const [ownerBookingsPeriod, setOwnerBookingsPeriod] = useState<OwnerBookingsPeriod>("future")
 
-    useEffect(() => {    // renter, upcoming bookings
+    useEffect(() => {
         if (!user?._id) return
 
-        // Ignore responses that arrive after the user changes or the component unmounts
+        const isOwnerBookingsTab = previewRole === "owner" && activeTab === "ownerBookings"
+        const isRenterBookingsTab = previewRole === "renter" && (activeTab === "upcoming" || activeTab === "history")
+        if (!isOwnerBookingsTab && !isRenterBookingsTab) return
+
         let ignore = false
 
-        profileService
-            .getAllBookinsByRenterId(user._id)
+        const getBookings = isOwnerBookingsTab
+            ? profileService.getAllBookinsByOwnerId(user._id)
+            : profileService.getAllBookinsByRenterId(user._id)
+
+        getBookings
             .then((data) => {
                 if (ignore) return
                 setBookings(Array.isArray(data) ? data : data?.data ?? [])
-                setBookingsError(null)
             })
             .catch(() => {
                 if (!ignore) setBookingsError("Unable to load your bookings.")
@@ -64,7 +71,7 @@ export function ProfileMain() {
         return () => {
             ignore = true
         }
-    }, [user?._id])
+    }, [user?._id, previewRole, activeTab])
 
       useEffect(() => {     // owner, get driveways
         if (!user?._id) return
@@ -96,20 +103,32 @@ export function ProfileMain() {
         ((user?.firstName?.[0] ?? "") + (user?.lastName?.[0] ?? "")).toUpperCase() ||
         (user?.email?.[0] ?? "?").toUpperCase()
 
-    const visibleBookings = bookings
-        .filter((booking) => (activeTab === "upcoming" ? isUpcoming(booking) : !isUpcoming(booking)))
-        .sort((a, b) => {
-            const diff = new Date(a.gameDate).getTime() - new Date(b.gameDate).getTime()
-            return activeTab === "upcoming" ? diff : -diff
-        })
     const tabs = TABS_BY_ROLE[previewRole]
     const activeTabLabel = tabs.find((tab) => tab.id === activeTab)?.label
     const isDrivewayTab = previewRole === "owner" && activeTab === "driveway"
     const isGamesTab = previewRole === "owner" && activeTab === "games"
+    const isOwnerBookingsTab = previewRole === "owner" && activeTab === "ownerBookings"
+    const showingFutureBookings = isOwnerBookingsTab ? ownerBookingsPeriod === "future" : activeTab === "upcoming"
+    const visibleBookings = bookings
+        .filter((booking) => showingFutureBookings ? isUpcoming(booking) : !isUpcoming(booking))
+        .sort((a, b) => {
+            const diff = new Date(a.gameDate).getTime() - new Date(b.gameDate).getTime()
+            return showingFutureBookings ? diff : -diff
+        })
 
     function handleRoleChange(role: PreviewRole) {
         setPreviewRole(role)
         setActiveTab(TABS_BY_ROLE[role][0].id)
+        setBookingsLoading(true)
+        setBookingsError(null)
+    }
+
+    function handleTabChange(tab: ProfileTab) {
+        setActiveTab(tab)
+        if (tab === "upcoming" || tab === "history" || tab === "ownerBookings") {
+            setBookingsLoading(true)
+            setBookingsError(null)
+        }
     }
 
     return (
@@ -140,7 +159,7 @@ export function ProfileMain() {
                         <button
                             key={id}
                             type="button"
-                            onClick={() => setActiveTab(id)}
+                            onClick={() => handleTabChange(id)}
                             className={clsx(
                                 "flex items-center gap-3 rounded-xl px-4 py-3 text-left text-base transition",
                                 activeTab === id
@@ -195,6 +214,27 @@ export function ProfileMain() {
                     </p>
                 )}
 
+                {isOwnerBookingsTab && (
+                    <div className="mt-6 flex gap-2" role="group" aria-label="Filter owner bookings">
+                        {(["previous", "future"] as const).map((period) => (
+                            <button
+                                key={period}
+                                type="button"
+                                aria-pressed={ownerBookingsPeriod === period}
+                                onClick={() => setOwnerBookingsPeriod(period)}
+                                className={clsx(
+                                    "rounded-full border px-5 py-2.5 text-sm font-medium transition",
+                                    ownerBookingsPeriod === period
+                                        ? "border-brand-500 bg-brand-50 text-brand-500"
+                                        : "border-border-subtle bg-surface-base text-text-muted hover:bg-surface-subtle"
+                                )}
+                            >
+                                {period === "previous" ? "Previous" : "Future"}
+                            </button>
+                        ))}
+                    </div>
+                )}
+
                 <div className="mt-8 flex flex-col gap-4">
                     {isGamesTab ? (
                         firstDriveway ? (
@@ -243,7 +283,13 @@ export function ProfileMain() {
                         <p role="alert" className="text-danger">{bookingsError}</p>
                     ) : visibleBookings.length === 0 ? (
                         <p className="text-text-muted">
-                            {activeTab === "upcoming" ? "You have no upcoming bookings." : "You have no past bookings."}
+                            {isOwnerBookingsTab
+                                ? ownerBookingsPeriod === "future"
+                                    ? "You have no future bookings."
+                                    : "You have no previous bookings."
+                                : activeTab === "upcoming"
+                                    ? "You have no upcoming bookings."
+                                    : "You have no past bookings."}
                         </p>
                     ) : (
                         visibleBookings.map((booking) => <BookingCard key={booking._id} booking={booking} />)
