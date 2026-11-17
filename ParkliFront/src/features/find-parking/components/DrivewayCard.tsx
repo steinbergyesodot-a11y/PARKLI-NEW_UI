@@ -185,9 +185,9 @@ export function DrivewayCard({ drivewayId, drivewayImage, drivewayImages = [], d
                                 </CardDescription>
                                 </div>
                                 <CardDescription>Parking begins {game.parkingBegins} CT</CardDescription>
-                                <p className={`inline-flex items-center gap-1.5 self-start text-sm rounded px-3 py-1 ${game.blocked ? "text-text-muted bg-surface-subtle" : game.booked ? "text-danger bg-danger-subtle" : "text-primary bg-border-subtle"}`}>
+                                <p className={`inline-flex items-center gap-1.5 self-start text-sm rounded px-3 py-1 ${game.booked || game.blocked ? "text-danger bg-danger-subtle" : "text-primary bg-border-subtle"}`}>
                                     <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-current" />
-                                    {game.blocked ? "Blocked" : game.booked ? "Booked" : "Available"}
+                                    {game.blocked ? "Booked" : game.booked ? "Booked" : "Available"}
                                 </p>
                                 </div>
                                 <div className="flex shrink-0 flex-col items-end gap-2">
