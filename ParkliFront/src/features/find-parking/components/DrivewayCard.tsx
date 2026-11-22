@@ -47,12 +47,13 @@ interface DrivewayCardProps {
     postedAt?: string
     view?: "list" | "grid"
     games: IGame[]
+    isAvailableForSelectedDate: boolean | null
     isModalOpen: boolean
     onOpenModal: () => void
     onCloseModal: () => void
 }  
 
-export function DrivewayCard({ drivewayId, drivewayImage, drivewayImages = [], drivewayName, drivewayAddress, walkMin, price, stadium,rules, postedAt, view = "list", games = [], isModalOpen, onOpenModal, onCloseModal }: DrivewayCardProps) {
+export function DrivewayCard({ drivewayId, drivewayImage, drivewayImages = [], drivewayName, drivewayAddress, walkMin, price, stadium,rules, postedAt, view = "list", games = [], isAvailableForSelectedDate, isModalOpen, onOpenModal, onCloseModal }: DrivewayCardProps) {
     const [modalTab, setModalTab] = useState<"details" | "games">("details");
     const [selectedMonth, setSelectedMonth] = useState("");
     const cancellationTooltipId = useId();
@@ -79,6 +80,9 @@ export function DrivewayCard({ drivewayId, drivewayImage, drivewayImages = [], d
                    </p>
                    <p className="flex items-center gap-1 text-sm text-text-muted"><FaPersonWalking className="shrink-0 text-text-muted" />
                     {walkMin} min walk to the ballpark</p>
+                   <p className={`text-sm font-semibold ${isAvailableForSelectedDate === null ? "text-text-muted" : isAvailableForSelectedDate ? "text-primary" : "text-danger"}`}>
+                    {isAvailableForSelectedDate === null ? "Select a game to see availability" : isAvailableForSelectedDate ? "Available" : "Unavailable for selected date"}
+                   </p>
                    <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-2">
                     <div className="flex flex-wrap gap-2">
                         <Button className="flex items-center gap-2 text-sm"><CiCalendar/> All game dates</Button>

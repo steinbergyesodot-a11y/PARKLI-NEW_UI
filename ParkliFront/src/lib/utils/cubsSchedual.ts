@@ -6,11 +6,13 @@ interface GameScheduleParams {
 
 export interface CubsHomeGame {
   gameDate: string;
+  officialDate: string;
   visitingTeam: string;
 }
 
 interface ScheduleGame {
   gameDate: string;
+  officialDate?: string;
   teams: {
     home: { team: { id: number; name: string } };
     away: { team: { id: number; name: string } };
@@ -40,6 +42,7 @@ export async function fetchCubsHomeGames({ startDate, endDate, season = "2026" }
     
     return homeGames.map((game) => ({
       gameDate: game.gameDate,
+      officialDate: game.officialDate ?? game.gameDate.slice(0, 10),
       visitingTeam: game.teams.away.team.name,
     }));
   } catch (error) {

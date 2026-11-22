@@ -10,6 +10,7 @@ import { LuLayoutGrid, LuList } from "react-icons/lu";
 import { fetchCubsHomeGames, type CubsHomeGame } from "../../../lib/utils/cubsSchedual";
 import { useGetAllDriveways } from "../hooks/useFindParking";
 import { DrivewayMap } from "./DrivewayMap";
+import { rankDrivewaysByAvailability } from "../utils/drivewayAvailability";
 
 
 export function FindParkingMain() {
@@ -18,6 +19,7 @@ export function FindParkingMain() {
     const [viewMode, setViewMode] = useState<"list" | "grid">("list");
     const [openDrivewayId, setOpenDrivewayId] = useState<string | null>(null);
     const [selectedGame, setSelectedGame] = useState<CubsHomeGame | null>(null);
+    const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const [games, setGames] = useState<CubsHomeGame[]>([]);
     const [isLoadingGames, setIsLoadingGames] = useState(true);
 
@@ -34,7 +36,7 @@ export function FindParkingMain() {
         return () => { active = false; };
     }, []);
 
-    const drivewayCards = driveways.map((driveway) => (
+    const drivewayCards = rankDrivewaysByAvailability(driveways, selectedDate).map(({ driveway, isAvailable }) => (
         <DrivewayCard
             key={driveway._id}
             drivewayId={driveway._id}
@@ -50,6 +52,7 @@ export function FindParkingMain() {
             price={driveway.price}
             view={viewMode}
             games={driveway.games}
+            isAvailableForSelectedDate={isAvailable}
             isModalOpen={openDrivewayId === driveway._id}
             onOpenModal={() => setOpenDrivewayId(driveway._id)}
             onCloseModal={() => setOpenDrivewayId(null)}
@@ -67,7 +70,15 @@ export function FindParkingMain() {
         </div>
         <p className="text-3xl font-semibold">Game day starts with a good spot.</p>
         <p className="text-text-muted text-sm">Park in a neighbor's driveway. Walk to Wrigley. Enjoy the game.</p>
-        <FilteringNAV selectedGame={selectedGame} onSelectGame={setSelectedGame} games={games} isLoading={isLoadingGames}/>
+        <FilteringNAV
+            selectedGame={selectedGame}
+            onSelectGame={(game) => {
+                setSelectedGame(game);
+                setSelectedDate(game.officialDate);
+            }}
+            games={games}
+            isLoading={isLoadingGames}
+        />
         <div className="flex gap-2">
             <Button title="Filters" className="bg-surface-subtle text-brand-300 text-sm border-1 border-border-subtle hover:bg-brand-50">
                 <span className="inline-flex items-center gap-2">
