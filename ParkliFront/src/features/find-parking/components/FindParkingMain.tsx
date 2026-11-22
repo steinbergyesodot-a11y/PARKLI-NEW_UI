@@ -17,7 +17,7 @@ export function FindParkingMain() {
     const {driveways} = useGetAllDriveways();
     const [viewMode, setViewMode] = useState<"list" | "grid">("list");
     const [openDrivewayId, setOpenDrivewayId] = useState<string | null>(null);
-    const [selectedGame, setSelectedGame] = useState<CubsHomeGame | null>(null);
+    const [selectedGameDate, setSelectedGameDate] = useState<string | null>(null);
     const [games, setGames] = useState<CubsHomeGame[]>([]);
     const [isLoadingGames, setIsLoadingGames] = useState(true);
 
@@ -67,7 +67,7 @@ export function FindParkingMain() {
         </div>
         <p className="text-3xl font-semibold">Game day starts with a good spot.</p>
         <p className="text-text-muted text-sm">Park in a neighbor's driveway. Walk to Wrigley. Enjoy the game.</p>
-        <FilteringNAV selectedGame={selectedGame} onSelectGame={setSelectedGame} games={games} isLoading={isLoadingGames}/>
+        <FilteringNAV selectedGameDate={selectedGameDate} onSelectGameDate={setSelectedGameDate} games={games} isLoading={isLoadingGames}/>
         <div className="flex gap-2">
             <Button title="Filters" className="bg-surface-subtle text-brand-300 text-sm border-1 border-border-subtle hover:bg-brand-50">
                 <span className="inline-flex items-center gap-2">

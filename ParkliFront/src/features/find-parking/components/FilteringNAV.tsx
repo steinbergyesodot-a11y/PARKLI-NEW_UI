@@ -18,14 +18,15 @@ function formatGameDate(game: CubsHomeGame) {
 
 
 interface FilteringNAVProps {
-    selectedGame: CubsHomeGame | null;
-    onSelectGame: (game: CubsHomeGame) => void;
+    selectedGameDate: string | null;
+    onSelectGameDate: (gameDate: string) => void;
     games: CubsHomeGame[];
     isLoading: boolean;
 }
 
-export function FilteringNAV({ selectedGame, onSelectGame, games, isLoading }: FilteringNAVProps){
+export function FilteringNAV({ selectedGameDate, onSelectGameDate, games, isLoading }: FilteringNAVProps){
     const gameDropdownRef = useRef<HTMLDetailsElement>(null);
+    const selectedGame = games.find((game) => game.gameDate === selectedGameDate) ?? null;
 
     return(
         <Card className="flex h-auto min-h-20 w-full items-stretch">
@@ -63,10 +64,10 @@ export function FilteringNAV({ selectedGame, onSelectGame, games, isLoading }: F
                                 <li key={`${game.gameDate}-${game.visitingTeam}`}>
                                     <button
                                         type="button"
-                                        aria-pressed={selectedGame?.gameDate === game.gameDate && selectedGame?.visitingTeam === game.visitingTeam}
+                                        aria-pressed={selectedGameDate === game.gameDate}
                                         className="flex w-full flex-col gap-1 rounded-md p-3 text-left hover:bg-surface-subtle aria-pressed:bg-brand-50 focus-visible:outline-2 focus-visible:outline-primary"
                                         onClick={() => {
-                                            onSelectGame(game);
+                                            onSelectGameDate(game.gameDate);
                                             if (gameDropdownRef.current) {
                                                 gameDropdownRef.current.open = false;
                                                 gameDropdownRef.current.querySelector("summary")?.focus();
