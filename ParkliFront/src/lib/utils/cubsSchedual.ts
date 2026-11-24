@@ -1,7 +1,7 @@
 interface GameScheduleParams {
   startDate?: string; // Format: "YYYY-MM-DD"
   endDate?: string;   // Format: "YYYY-MM-DD"
-  season?: string;    // Format: "2026"
+  season?: string;    // Format: "2027"
 }
 
 export interface CubsHomeGame {
@@ -17,7 +17,7 @@ interface ScheduleGame {
   };
 }
 
-export async function fetchCubsHomeGames({ startDate, endDate, season = "2026" }: GameScheduleParams = {}): Promise<CubsHomeGame[]> {
+export async function fetchCubsHomeGames({ startDate, endDate, season = "2027" }: GameScheduleParams = {}): Promise<CubsHomeGame[]> {
   const cubsTeamId = 112; // Chicago Cubs Team ID
   let url = `https://statsapi.mlb.com/api/v1/schedule?teamId=${cubsTeamId}&season=${season}&sportId=1`;
 
