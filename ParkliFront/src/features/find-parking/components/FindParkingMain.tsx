@@ -24,7 +24,7 @@ export function FindParkingMain() {
     useEffect(() => {
         let active = true;
 
-        fetchCubsHomeGames({ season: "2026" }).then((homeGames) => {
+        fetchCubsHomeGames({ season: "2027" }).then((homeGames) => {
             if (active) {
                 setGames([...homeGames].sort((first, second) => Date.parse(first.gameDate) - Date.parse(second.gameDate)));
                 setIsLoadingGames(false);
@@ -50,6 +50,7 @@ export function FindParkingMain() {
             price={driveway.price}
             view={viewMode}
             games={driveway.games}
+            selectedGameDate={selectedGameDate}
             isModalOpen={openDrivewayId === driveway._id}
             onOpenModal={() => setOpenDrivewayId(driveway._id)}
             onCloseModal={() => setOpenDrivewayId(null)}
@@ -87,7 +88,7 @@ export function FindParkingMain() {
         </div>
 
         <div className="mt-2 flex flex-col lg:flex-row lg:items-stretch">
-        <div className="w-full px-4 pb-8 sm:px-6 lg:w-2/5 lg:pl-8 lg:pr-6">
+        <div className="w-full px-4 pb-8 sm:px-6 lg:w-1/2 lg:pl-8 lg:pr-6">
             <div className="mb-3 flex w-full flex-wrap items-center justify-between gap-3">
                 <p className="text-sm text-text-muted">
                     {driveways.length} {driveways.length === 1 ? "spot" : "spots"}

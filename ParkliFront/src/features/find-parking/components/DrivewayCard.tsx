@@ -33,6 +33,15 @@ export interface IGame {
   booked: boolean;
   blocked: boolean;
 }
+
+function formatSelectedGameDate(gameDate: string) {
+    return new Date(`${gameDate}T00:00:00`).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+    });
+}
+
 interface DrivewayCardProps {
     drivewayId: string
     drivewayImage: string
@@ -47,16 +56,26 @@ interface DrivewayCardProps {
     postedAt?: string
     view?: "list" | "grid"
     games: IGame[]
+    selectedGameDate: string | null
     isModalOpen: boolean
     onOpenModal: () => void
     onCloseModal: () => void
 }  
 
-export function DrivewayCard({ drivewayId, drivewayImage, drivewayImages = [], drivewayName, drivewayAddress, walkMin, price, stadium,rules, postedAt, view = "list", games = [], isModalOpen, onOpenModal, onCloseModal }: DrivewayCardProps) {
+export function DrivewayCard({ drivewayId, drivewayImage, drivewayImages = [], drivewayName, drivewayAddress, walkMin, price, stadium,rules, postedAt, view = "list", games = [], selectedGameDate, isModalOpen, onOpenModal, onCloseModal }: DrivewayCardProps) {
     const [modalTab, setModalTab] = useState<"details" | "games">("details");
     const [selectedMonth, setSelectedMonth] = useState("");
     const cancellationTooltipId = useId();
     const navigate = useNavigate();
+ 
+    const selectedGame = selectedGameDate === null
+        ? undefined
+        : games.find((game) => game.date.slice(0, 10) === selectedGameDate);
+    const availability = selectedGameDate === null
+        ? null
+        : selectedGame && !selectedGame.booked && !selectedGame.blocked
+            ? "Available"
+            : "unavailable on selected date";
 
     const filteredGames = games.filter((game) => (
         selectedMonth === "" || String(Number(game.date.split("-")[1])) === selectedMonth
@@ -64,12 +83,12 @@ export function DrivewayCard({ drivewayId, drivewayImage, drivewayImages = [], d
 
     return(
         <>
-        <Card className="h-auto w-full cursor-pointer border border-brand-100" onClick={onOpenModal}>
+        <Card className={`h-auto w-full cursor-pointer border border-brand-100 ${availability === "unavailable on selected date" ? "opacity-75" : ""}`} onClick={onOpenModal}>
              <div className={`flex gap-3 p-3 ${view === "grid" ? "flex-col" : "flex-col sm:flex-row"}`}>
                 <img
                 src={drivewayImage}
                 alt="Parking spot"
-                className={`w-full rounded-lg object-cover ${view === "grid" ? "h-40" : "h-44 sm:h-32 sm:w-36"}`}
+                className={`w-full rounded-lg object-cover ${view === "grid" ? "h-40" : "h-44 sm:h-auto sm:w-36 sm:self-stretch"}`}
                 />
                 <div className="flex min-w-0 flex-1 flex-col gap-2">
                          <h3 className="truncate text-md font-semibold">{drivewayName}</h3>
@@ -79,14 +98,23 @@ export function DrivewayCard({ drivewayId, drivewayImage, drivewayImages = [], d
                    </p>
                    <p className="flex items-center gap-1 text-sm text-text-muted"><FaPersonWalking className="shrink-0 text-text-muted" />
                     {walkMin} min walk to the ballpark</p>
+                   {availability === "Available" || availability === "unavailable on selected date" ? (
+                    <span className={`inline-flex w-fit items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${availability === "Available" ? "bg-brand-50 text-primary" : "bg-danger-subtle text-danger"}`}>
+                        <span aria-hidden="true" className="size-2 shrink-0 rounded-full bg-current" />
+                        {availability}
+                    </span>
+                   ) : (
+                    <p className="max-w-full break-words text-sm leading-tight font-medium text-text-muted">{availability}</p>
+                   )}
                    <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-2">
                     <div className="flex flex-wrap gap-2">
                         <Button className="flex items-center gap-2 text-sm"><CiCalendar/> All game dates</Button>
                         <Button className="bg-surface-subtle text-brand-300 border text-sm border-border-subtle hover:bg-brand-50">View spot</Button>
                     </div>
-                    <div className="flex items-center gap-2">
-                    <p className="ml-auto shrink-0 font-semibold text-text-main">${price}</p>
-                    <p className="ml-auto shrink-0 text-sm text-text-muted">/ game</p>
+                    <div className="flex min-w-0 items-center gap-2">
+                    <div className="min-w-0 text-right">
+                        <p className="font-semibold text-text-main">${price} <span className="text-sm font-normal text-text-muted">/ game</span></p>
+                    </div>
                     </div>
                    </div>
                 </div>
